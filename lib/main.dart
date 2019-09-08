@@ -8,6 +8,7 @@ import 'package:logger/logger.dart' as Logger;
 
 import 'loading.dart';
 import 'dialog.dart';
+import 'result.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,18 +21,27 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Open CSB Door',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primaryColor: Colors.blue[300],
-        accentColor: Colors.white
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primaryColor: Colors.blue[300],
+          accentColor: Colors.white,
+          fontFamily: 'Montserrat',
+          textTheme: TextTheme(
+          headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          body1: TextStyle(fontSize: 14.0),
+        )
+          ),
+          
+           // Define the default font family.
+        
       home: MyHomePage(title: 'Open CSB Door'),
     );
   }
@@ -57,6 +67,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _fetchingData = false;
+  DoorResult _doorResult = null;
 
   void _setFetchingData(bool status) {
     setState(() {
@@ -69,12 +80,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _setDoorResultReceived(DoorResult result) {
+    setState(() {
+      _doorResult = result;
+      _fetchingData = false;
+    });
+  }
+
+  void _removeDoorResult() {
+    setState(() {
+      _doorResult = null;
+    });
+  }
+
   _showTheDialog(bool success, String text) {
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomDialog(
-            widgetChild: Text(text),
-          ),
+        widgetChild: Text(text),
+      ),
     );
   }
 
@@ -82,11 +106,16 @@ class _MyHomePageState extends State<MyHomePage> {
     _setFetchingData(true);
 
     _callDoorOpener().then((result) {
-      _setFetchingData(false);
-      _showTheDialog(result.succes, result.text);
+      _setDoorResultReceived(result);
+      //_showTheDialog(result.succes, result.text);
     }, onError: (err) {
-      _setFetchingData(false);
-      _showTheDialog(false, "An error occured");
+      _setDoorResultReceived(
+          new DoorResult(succes: false, text: err.toString()));
+      //_showTheDialog(false, "An error occured");
+    }).then((result) {
+      Future.delayed(const Duration(milliseconds: 5000), () {
+        _removeDoorResult();
+      });
     });
   }
 
@@ -114,6 +143,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget widgetToShow;
+    if (_doorResult != null) {
+      widgetToShow = Result(
+          success: _doorResult != null ? _doorResult.succes : false,
+          text: _doorResult != null ? _doorResult.text : "An error occured");
+    }else if(_fetchingData){
+      widgetToShow = Loading(
+                        backgroundColor: Colors.transparent,
+                        loadingColor: Theme.of(context).accentColor,
+                        text: "Trying to open your door");
+    } else {
+      widgetToShow = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: 240.0,
+              width: 240.0,
+              decoration: new BoxDecoration(
+                image: DecorationImage(
+                  image: new AssetImage('images/door.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: _openDoor,
+              color: Theme.of(context).accentColor,
+              textColor: Theme.of(context).backgroundColor,
+              child: Text(
+                "Open the door!"
+              ),
+            )
+          ]);
+    }
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -123,7 +186,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
-        
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -143,35 +205,55 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              height: 240.0,
-              width: 240.0,
-              decoration: new BoxDecoration(
-                image: DecorationImage(
-                  image: new AssetImage('images/door.png'),
-                  fit: BoxFit.fill,
-                ),
-                shape: BoxShape.circle,
-              ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return ScaleTransition(child: child, scale: animation);
+              },
+              child: widgetToShow
             ),
-            AnimatedOpacity(
-                opacity: _fetchingData ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 500),
-                child: FlatButton(
-                  onPressed: _openDoor,
-                  color: Theme.of(context).accentColor,
-                  textColor: Theme.of(context).backgroundColor,
-                  child: Text(
-                    _fetchingData ? "Loading" : "Open the door!",
+            /* Visibility(
+                visible: _doorResult == null && !_fetchingData,
+                child: Container(
+                  height: 240.0,
+                  width: 240.0,
+                  decoration: new BoxDecoration(
+                    image: DecorationImage(
+                      image: new AssetImage('images/door.png'),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: BoxShape.circle,
                   ),
                 )),
-            AnimatedOpacity(
-                opacity: _fetchingData ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 500),
-                child: Loading(
-                  backgroundColor: Colors.transparent,
-                  loadingColor: Theme.of(context).accentColor,
-                ))
+            Visibility(
+                visible: _doorResult == null && !_fetchingData,
+                child: (AnimatedOpacity(
+                    opacity: _fetchingData ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 500),
+                    child: FlatButton(
+                      onPressed: _openDoor,
+                      color: Theme.of(context).accentColor,
+                      textColor: Theme.of(context).backgroundColor,
+                      child: Text(
+                        "Open the door!",
+                      ),
+                    )))),
+            Visibility(
+                visible: _fetchingData,
+                child: AnimatedOpacity(
+                    opacity: _fetchingData ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 500),
+                    child: Loading(
+                        backgroundColor: Colors.transparent,
+                        loadingColor: Theme.of(context).accentColor,
+                        text: "Trying to open your door"))),
+            Visibility(
+                visible: _doorResult != null && !_fetchingData,
+                child: Result(
+                    success: _doorResult != null ? _doorResult.succes : false,
+                    text: _doorResult != null
+                        ? _doorResult.text
+                        : "An error occured")) */
           ],
         ),
       ),
