@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<DoorResult> _callDoorOpener() async {
     logger.i("Open door!");
-    String url = 'http://192.168.0.209:3000/open/';
+    String url = 'https://agile-reaches-36891.herokuapp.com/open/';
     Map<String, String> headers = {"Content-type": "application/json"};
     String jsonBody = '{"username": "9801148090", "password":"Trumpet13"}';
     http.Response response;
@@ -172,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Theme.of(context).accentColor,
               textColor: Theme.of(context).backgroundColor,
               child: Text(
-                "Open the door!"
+                "Open the door"
               ),
             )
           ]);
