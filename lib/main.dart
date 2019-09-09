@@ -70,21 +70,12 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-
-  
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _fetchingData = false;
   DoorResult _doorResult;
   bool _showingSettings = false;
-
-  
-
-  
-  
-
- 
 
   void _setFetchingData(bool status) {
     setState(() {
@@ -110,17 +101,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
-  
-
-  _toggleSettings(){
+  _toggleSettings() {
     setState(() {
-     _showingSettings=!_showingSettings; 
+      _showingSettings = !_showingSettings;
     });
   }
-
-  
-
-  
 
   _openDoor() async {
     _setFetchingData(true);
@@ -165,11 +150,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     }
   }
 
-  Future<bool> _onWillPop() async{
-    if(_showingSettings){
+  Future<bool> _onWillPop() async {
+    if (_showingSettings) {
       _toggleSettings();
       return false;
-    }else{
+    } else {
       return true;
     }
   }
@@ -178,48 +163,90 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     Widget openOrSettings;
 
-    if(!this._showingSettings){
-    Widget widgetToShow;
-    if (_doorResult != null) {
-      widgetToShow = Result(
-          success: _doorResult != null ? _doorResult.succes : false,
-          text: _doorResult != null ? _doorResult.text : "An error occured");
-    } else if (_fetchingData) {
-      widgetToShow = Loading(
-          backgroundColor: Colors.transparent,
-          loadingColor: Theme.of(context).accentColor,
-          text: "Trying to open your door");
-    } else {
-      widgetToShow = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              height: 240.0,
-              width: 240.0,
-              decoration: new BoxDecoration(
-                image: DecorationImage(
-                  image: new AssetImage('images/door.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            FlatButton(
+    if (!this._showingSettings) {
+      Widget widgetToShow;
+      if (_doorResult != null) {
+        widgetToShow = Result(
+            success: _doorResult != null ? _doorResult.succes : false,
+            text: _doorResult != null ? _doorResult.text : "An error occured");
+      } else if (_fetchingData) {
+        widgetToShow = Loading(
+            backgroundColor: Colors.transparent,
+            loadingColor: Theme.of(context).accentColor,
+            text: "Trying to open your door");
+      } else {
+        widgetToShow = Column(
+          
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                  onTap: _openDoor,
+                  child: Container(
+                    height: 240.0,
+                    width: 240.0,
+                    decoration: new BoxDecoration(
+                        image: DecorationImage(
+                          image: new AssetImage('images/door.png'),
+                          fit: BoxFit.fill,
+                        ),
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).accentColor),
+                  )),
+                  SizedBox(height: 40),
+                   Container(
+                    height: 80.0,
+                    width: 80.0,
+                    
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).accentColor),
+                        child:IconButton(
+                          icon: Icon(Icons.settings,color: Colors.black,),onPressed: this._toggleSettings,
+                        ))
+                  
+              /*FlatButton(
               onPressed: _openDoor,
               color: Theme.of(context).accentColor,
               textColor: Theme.of(context).backgroundColor,
               child: Text("Open the door"),
-            )
-          ]);
-    }
+            )*/
+            ]);
+      }
 
-    openOrSettings = AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return ScaleTransition(child: child, scale: animation);
-                },
-                child: widgetToShow);
-    }else{
-      openOrSettings=Settings();
+      openOrSettings = AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          switchInCurve: Interval(
+            0.1,
+            0.5,
+            curve: Curves.linear,
+          ),
+          switchOutCurve: Interval(
+            0.6,
+            1,
+            curve: Curves.linear,
+          ),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(child: child, scale: animation);
+          },
+          child: widgetToShow);
+    } else {
+      openOrSettings = Column(
+          
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Settings(),
+              SizedBox(height:40),
+              Container(
+                    height: 80.0,
+                    width: 80.0,
+                    
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).accentColor),
+                        child:IconButton(
+                          icon: Icon(Icons.arrow_back,color: Colors.black,),onPressed: this._toggleSettings,
+                        ))]);
+
     }
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -227,55 +254,49 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return WillPopScope(onWillPop: _onWillPop,child: Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(actions: <Widget>[
-        // action button
-        IconButton(
-          icon: Icon(Icons.settings),
-          onPressed: this._toggleSettings,
-        ),
-      ]),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                switchInCurve: Interval(
-            0.3,
-            0.7,
-            curve: Curves.linear,
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).primaryColor,
+          
+          body: Center(
+            // Center is a layout widget. It takes a single child and positions it
+            // in the middle of the parent.
+            child: Column(
+              // Column is also layout widget. It takes a list of children and
+              // arranges them vertically. By default, it sizes itself to fit its
+              // children horizontally, and tries to be as tall as its parent.
+              //
+              // Invoke "debug painting" (press "p" in the console, choose the
+              // "Toggle Debug Paint" action from the Flutter Inspector in Android
+              // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+              // to see the wireframe for each widget.
+              //
+              // Column has various properties to control how it sizes itself and
+              // how it positions its children. Here we use mainAxisAlignment to
+              // center the children vertically; the main axis here is the vertical
+              // axis because Columns are vertical (the cross axis would be
+              // horizontal).
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 800),
+                    switchInCurve: Interval(
+                      0.5,
+                      1,
+                      curve: Curves.easeIn,
+                    ),
+                    switchOutCurve: Interval(
+                      0.5,
+                      1,
+                      curve: Curves.linear,
+                    ),
+                    child: openOrSettings),
+              ],
+            ),
           ),
-
-          switchOutCurve: Interval(
-            0.7,
-            1,
-            curve: Curves.linear,
-          ),
-                child: openOrSettings),
-            
-          ],
-        ),
-      ),
-      // This trailing comma makes auto-formatting nicer for build methods.
-    ));
+          // This trailing comma makes auto-formatting nicer for build methods.
+        ));
   }
 }
 
