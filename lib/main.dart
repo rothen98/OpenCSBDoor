@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,9 @@ import 'package:logger/logger.dart' as Logger;
 import 'loading.dart';
 import 'dialog.dart';
 import 'result.dart';
+import 'splash.dart';
+import 'init.dart';
+import 'storage.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,8 +46,11 @@ class MyApp extends StatelessWidget {
           
            // Define the default font family.
         
-      home: MyHomePage(title: 'Open CSB Door'),
-    );
+      home: Splash(
+        initWidget:Init(homeWidget:MyHomePage(title: 'Open CSB Door')), 
+        ordinaryWidget:MyHomePage(title: 'Open CSB Door'),
+        haveBeenEntered:["username","password"],
+    ));
   }
 }
 
@@ -120,10 +127,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<DoorResult> _callDoorOpener() async {
+    final storage = new FlutterSecureStorage();
     logger.i("Open door!");
     String url = 'https://agile-reaches-36891.herokuapp.com/open/';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String jsonBody = '{"username": "9801148090", "password":"Trumpet13"}';
+    String username = await Storage.readValue("username");
+    String password = await Storage.readValue("password");
+    String jsonBody = '{"username": "'+ username + '", "password": "' + password + '"}';
+    logger.i(jsonBody);
     http.Response response;
     try {
       response = await http.post(url, headers: headers, body: jsonBody);
