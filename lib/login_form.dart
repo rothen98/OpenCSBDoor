@@ -1,47 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:logger/logger.dart' as Logger;
-import 'storage.dart';
-import 'login_form.dart';
-final logger = Logger.Logger();
-class Init extends StatefulWidget {
-  final Widget homeWidget;
 
-  Init({@required this.homeWidget});
+import 'package:logger/logger.dart' as Logger;
+typedef BackFromLogin(LoginResult result); 
+final logger = Logger.Logger();
+class  LoginForm extends StatefulWidget {
+  
+  final BackFromLogin onDone;
+  final String buttonText;
+
+  LoginForm({@required this.onDone, @required this.buttonText});
 
   @override
-  InitState createState() => new InitState();
+  LoginFormState createState() => new LoginFormState();
 }
 
-class InitState extends State<Init> {
+class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   String _username;
   String _password;
 
-  void _storeData() async {
-    //if (this._formKey.currentState.validate()) {
-    //_formKey.currentState.save(); // Save our form now.
-    
-    
-    await Storage.writeValue("username", this._username);
-    await Storage.writeValue("password", this._password);
-    //}
-  }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: new Center(
-            child: 
-            LoginForm(
-              onDone: (result) async {
-                await Storage.writeValue("username", result.username);
-                await Storage.writeValue("password", result.password);
-                Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                      builder: (context) => widget.homeWidget));
-              },
-              buttonText: "Enter your CSB credentials",
-            )/*Form(
+    return new Center(
+            child: Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,15 +67,19 @@ class InitState extends State<Init> {
               // the form is invalid.
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
-                this._storeData();
-                Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                    builder: (context) => widget.homeWidget));
+                widget.onDone(new LoginResult(username:this._username, password:this._password));
               }
             },
-            child: Text('Submit'),
+            child: Text(widget.buttonText),
           ),
-        ],*/
+        ],
       ),
-    )/*))*/;
+    ));
   }
+}
+
+class LoginResult{
+  String username;
+  String password;
+  LoginResult({this.username,this.password});
 }

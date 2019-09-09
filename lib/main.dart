@@ -13,6 +13,7 @@ import 'result.dart';
 import 'splash.dart';
 import 'init.dart';
 import 'storage.dart';
+import 'settings.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,34 +24,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Open CSB Door',
-      theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primaryColor: Colors.blue[300],
-          accentColor: Colors.white,
-          fontFamily: 'Montserrat',
-          textTheme: TextTheme(
-          headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          body1: TextStyle(fontSize: 14.0),
-        )
-          ),
-          
-           // Define the default font family.
-        
-      home: Splash(
-        initWidget:Init(homeWidget:MyHomePage(title: 'Open CSB Door')), 
-        ordinaryWidget:MyHomePage(title: 'Open CSB Door'),
-        haveBeenEntered:["username","password"],
-    ));
+        title: 'Open CSB Door',
+        theme: ThemeData(
+            // This is the theme of your application.
+            //
+            // Try running your application with "flutter run". You'll see the
+            // application has a blue toolbar. Then, without quitting the app, try
+            // changing the primarySwatch below to Colors.green and then invoke
+            // "hot reload" (press "r" in the console where you ran "flutter run",
+            // or simply save your changes to "hot reload" in a Flutter IDE).
+            // Notice that the counter didn't reset back to zero; the application
+            // is not restarted.
+            primaryColor: Colors.blue[300],
+            accentColor: Colors.white,
+            fontFamily: 'Montserrat',
+            textTheme: TextTheme(
+              headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+              body1: TextStyle(fontSize: 14.0),
+            )),
+
+        // Define the default font family.
+
+        home: Splash(
+          initWidget: Init(homeWidget: MyHomePage(title: 'Open CSB Door')),
+          ordinaryWidget: MyHomePage(title: 'Open CSB Door'),
+          haveBeenEntered: ["username", "password"],
+        ));
   }
 }
 
@@ -70,11 +70,21 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
+
+  
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _fetchingData = false;
-  DoorResult _doorResult = null;
+  DoorResult _doorResult;
+  bool _showingSettings = false;
+
+  
+
+  
+  
+
+ 
 
   void _setFetchingData(bool status) {
     setState(() {
@@ -100,14 +110,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  _showTheDialog(bool success, String text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => CustomDialog(
-        widgetChild: Text(text),
-      ),
-    );
+  
+
+  _toggleSettings(){
+    setState(() {
+     _showingSettings=!_showingSettings; 
+    });
   }
+
+  
+
+  
 
   _openDoor() async {
     _setFetchingData(true);
@@ -127,13 +140,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<DoorResult> _callDoorOpener() async {
-    final storage = new FlutterSecureStorage();
     logger.i("Open door!");
     String url = 'https://agile-reaches-36891.herokuapp.com/open/';
     Map<String, String> headers = {"Content-type": "application/json"};
     String username = await Storage.readValue("username");
     String password = await Storage.readValue("password");
-    String jsonBody = '{"username": "'+ username + '", "password": "' + password + '"}';
+    String jsonBody =
+        '{"username": "' + username + '", "password": "' + password + '"}';
     logger.i(jsonBody);
     http.Response response;
     try {
@@ -152,18 +165,30 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<bool> _onWillPop() async{
+    if(_showingSettings){
+      _toggleSettings();
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget openOrSettings;
+
+    if(!this._showingSettings){
     Widget widgetToShow;
     if (_doorResult != null) {
       widgetToShow = Result(
           success: _doorResult != null ? _doorResult.succes : false,
           text: _doorResult != null ? _doorResult.text : "An error occured");
-    }else if(_fetchingData){
+    } else if (_fetchingData) {
       widgetToShow = Loading(
-                        backgroundColor: Colors.transparent,
-                        loadingColor: Theme.of(context).accentColor,
-                        text: "Trying to open your door");
+          backgroundColor: Colors.transparent,
+          loadingColor: Theme.of(context).accentColor,
+          text: "Trying to open your door");
     } else {
       widgetToShow = Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -182,11 +207,19 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: _openDoor,
               color: Theme.of(context).accentColor,
               textColor: Theme.of(context).backgroundColor,
-              child: Text(
-                "Open the door"
-              ),
+              child: Text("Open the door"),
             )
           ]);
+    }
+
+    openOrSettings = AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(child: child, scale: animation);
+                },
+                child: widgetToShow);
+    }else{
+      openOrSettings=Settings();
     }
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -194,8 +227,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
+    return WillPopScope(onWillPop: _onWillPop,child: Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
+      appBar: AppBar(actions: <Widget>[
+        // action button
+        IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: this._toggleSettings,
+        ),
+      ]),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -217,59 +257,25 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(child: child, scale: animation);
-              },
-              child: widgetToShow
-            ),
-            /* Visibility(
-                visible: _doorResult == null && !_fetchingData,
-                child: Container(
-                  height: 240.0,
-                  width: 240.0,
-                  decoration: new BoxDecoration(
-                    image: DecorationImage(
-                      image: new AssetImage('images/door.png'),
-                      fit: BoxFit.fill,
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                )),
-            Visibility(
-                visible: _doorResult == null && !_fetchingData,
-                child: (AnimatedOpacity(
-                    opacity: _fetchingData ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 500),
-                    child: FlatButton(
-                      onPressed: _openDoor,
-                      color: Theme.of(context).accentColor,
-                      textColor: Theme.of(context).backgroundColor,
-                      child: Text(
-                        "Open the door!",
-                      ),
-                    )))),
-            Visibility(
-                visible: _fetchingData,
-                child: AnimatedOpacity(
-                    opacity: _fetchingData ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 500),
-                    child: Loading(
-                        backgroundColor: Colors.transparent,
-                        loadingColor: Theme.of(context).accentColor,
-                        text: "Trying to open your door"))),
-            Visibility(
-                visible: _doorResult != null && !_fetchingData,
-                child: Result(
-                    success: _doorResult != null ? _doorResult.succes : false,
-                    text: _doorResult != null
-                        ? _doorResult.text
-                        : "An error occured")) */
+                duration: const Duration(milliseconds: 1000),
+                switchInCurve: Interval(
+            0.3,
+            0.7,
+            curve: Curves.linear,
+          ),
+
+          switchOutCurve: Interval(
+            0.7,
+            1,
+            curve: Curves.linear,
+          ),
+                child: openOrSettings),
+            
           ],
         ),
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    ));
   }
 }
 

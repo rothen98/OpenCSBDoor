@@ -1,46 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:logger/logger.dart' as Logger;
 import 'storage.dart';
 import 'login_form.dart';
 final logger = Logger.Logger();
-class Init extends StatefulWidget {
-  final Widget homeWidget;
-
-  Init({@required this.homeWidget});
+class Settings extends StatefulWidget {
+  
 
   @override
-  InitState createState() => new InitState();
+  SettingsState createState() => new SettingsState();
 }
 
-class InitState extends State<Init> {
-  final _formKey = GlobalKey<FormState>();
-  String _username;
-  String _password;
-
-  void _storeData() async {
-    //if (this._formKey.currentState.validate()) {
-    //_formKey.currentState.save(); // Save our form now.
-    
-    
-    await Storage.writeValue("username", this._username);
-    await Storage.writeValue("password", this._password);
-    //}
-  }
+class SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: new Center(
+    return new Center(
             child: 
             LoginForm(
               onDone: (result) async {
                 await Storage.writeValue("username", result.username);
                 await Storage.writeValue("password", result.password);
-                Navigator.of(context).pushReplacement(new MaterialPageRoute(
-                      builder: (context) => widget.homeWidget));
+                
               },
-              buttonText: "Enter your CSB credentials",
+              buttonText: "Change CSB credentials",
             )/*Form(
       key: _formKey,
       child: Column(
@@ -93,7 +76,6 @@ class InitState extends State<Init> {
             child: Text('Submit'),
           ),
         ],*/
-      ),
-    )/*))*/;
+    );
   }
 }
