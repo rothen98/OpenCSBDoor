@@ -47,11 +47,28 @@ class MyApp extends StatelessWidget {
         // Define the default font family.
 
         home: Splash(
-          initWidget: Init(homeWidget: MyHomePage(title: 'Open CSB Door')),
-          ordinaryWidget: MyHomePage(title: 'Open CSB Door'),
+          initWidgetRoute: _createRoute(Init(homeWidgetRoute: _createRoute(MyHomePage(title: 'Open CSB Door')))),
+          ordinaryWidgetRoute: _createRoute(MyHomePage(title: 'Open CSB Door')),
           haveBeenEntered: ["username", "password"],
         ));
   }
+  Route _createRoute(Widget widget) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widget,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
 }
 
 class MyHomePage extends StatefulWidget {
@@ -262,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           body: Center(
             // Center is a layout widget. It takes a single child and positions it
             // in the middle of the parent.
-            child: Column(
+            child: SingleChildScrollView(child:Column(
               // Column is also layout widget. It takes a list of children and
               // arranges them vertically. By default, it sizes itself to fit its
               // children horizontally, and tries to be as tall as its parent.
@@ -296,7 +313,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
           ),
           // This trailing comma makes auto-formatting nicer for build methods.
-        ));
+        )));
   }
 }
 

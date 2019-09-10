@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:logger/logger.dart' as Logger;
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'storage.dart';
 
 final logger = Logger.Logger();
 
 class Splash extends StatefulWidget {
-  final Widget initWidget;
-  final Widget ordinaryWidget;
+  final Route initWidgetRoute;
+  final Route ordinaryWidgetRoute;
   final List<String> haveBeenEntered;
-  Splash({@required this.initWidget, @required this.ordinaryWidget, @required this.haveBeenEntered});
+  Splash({@required this.initWidgetRoute, @required this.ordinaryWidgetRoute, @required this.haveBeenEntered});
 
 @override
 SplashState createState() => new SplashState();
@@ -23,10 +23,10 @@ Future checkFirstSeen() async {
     
     if (entered) {
     Navigator.of(context).pushReplacement(
-        new MaterialPageRoute(builder: (context) => widget.ordinaryWidget));
+        widget.ordinaryWidgetRoute);
     } else {
     Navigator.of(context).pushReplacement(
-        new MaterialPageRoute(builder: (context) => widget.initWidget));
+        widget.initWidgetRoute);
     }
 }
 
