@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
+import 'button_color.dart';
 
 typedef BackFromLogin(LoginResult result);
 final logger = Logger.Logger();
@@ -71,7 +72,7 @@ class LoginFormState extends State<LoginForm> {
                   SizedBox(
                   height: 15,
                 ),
-                  FlatButton(
+                  ChangeRaisedButtonColor(
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -80,10 +81,13 @@ class LoginFormState extends State<LoginForm> {
                         widget.onDone(new LoginResult(
                             username: this._username,
                             password: this._password));
+                            return true;
                       }
+                      return false;
                     },
-                  color: Colors.blue,
-                  padding: EdgeInsets.all(20),
+                  fromColor: Colors.blue,
+                  toColor: Colors.green,
+                  
                   child: Text(
                     widget.buttonText,
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
