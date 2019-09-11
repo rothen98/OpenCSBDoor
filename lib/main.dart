@@ -143,12 +143,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Future<DoorResult> _callDoorOpener() async {
     logger.i("Open door!");
-    String url = 'https://agile-reaches-36891.herokuapp.com/open/';
+    String url = 'https://agile-reaches-36891.herokuapp.com/api/open/';
     Map<String, String> headers = {"Content-type": "application/json"};
     String username = await Storage.readValue("username");
     String password = await Storage.readValue("password");
+    String key = "1";
     String jsonBody =
-        '{"username": "' + username + '", "password": "' + password + '"}';
+        '{"username": "' + username + '", "password": "' + password + '", "key":"' + key + '"}';
     logger.i(jsonBody);
     http.Response response;
     try {
