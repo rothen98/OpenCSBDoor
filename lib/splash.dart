@@ -34,15 +34,19 @@ Future checkFirstSeen() async {
 void initState() {
     super.initState();
     new Timer(new Duration(milliseconds: 200), () {
-    checkFirstSeen();
+      checkFirstSeen();
     });
 }
 
 @override
 Widget build(BuildContext context) {
-    return new Scaffold(
-    body: new Center(
-        child: new Text('Loading...'),
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+    body: Center(
+        child: Text(
+          "Open the door",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.title.copyWith(color: Theme.of(context).accentColor))
     ),
     );
 }
