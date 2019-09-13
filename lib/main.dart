@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
+import 'package:open_csb_door/webservice.dart';
 
 import 'loading.dart';
 
@@ -14,6 +14,8 @@ import 'splash.dart';
 import 'init.dart';
 import 'storage.dart';
 import 'settings.dart';
+import 'open_button.dart';
+import 'door.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
         title: 'Open CSB Door',
         theme: ThemeData(
@@ -47,28 +50,32 @@ class MyApp extends StatelessWidget {
         // Define the default font family.
 
         home: Splash(
-          initWidgetRoute: _createRoute(Init(homeWidgetRoute: _createRoute(MyHomePage(title: 'Open CSB Door')))),
+          initWidgetRoute: _createRoute(Init(
+              homeWidgetRoute:
+                  _createRoute(MyHomePage(title: 'Open CSB Door')))),
           ordinaryWidgetRoute: _createRoute(MyHomePage(title: 'Open CSB Door')),
           haveBeenEntered: ["username", "password"],
         ));
   }
+
   Route _createRoute(Widget widget) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => widget,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => widget,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -91,7 +98,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _fetchingData = false;
-  DoorResult _doorResult;
+  List<Door> _doors = new List();
   bool _showingSettings = false;
 
   void _setFetchingData(bool status) {
@@ -105,63 +112,41 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _setDoorResultReceived(DoorResult result) {
-    setState(() {
-      _doorResult = result;
-      _fetchingData = false;
-    });
-  }
-
-  void _removeDoorResult() {
-    setState(() {
-      _doorResult = null;
-    });
-  }
-
   _toggleSettings() {
     setState(() {
       _showingSettings = !_showingSettings;
     });
   }
 
-  _openDoor() async {
-    _setFetchingData(true);
-
-    _callDoorOpener().then((result) {
-      _setDoorResultReceived(result);
-      //_showTheDialog(result.succes, result.text);
-    }, onError: (err) {
-      _setDoorResultReceived(
-          new DoorResult(succes: false, text: err.toString()));
-      //_showTheDialog(false, "An error occured");
-    }).then((result) {
-      Future.delayed(const Duration(milliseconds: 5000), () {
-        _removeDoorResult();
-      });
-    });
+  @override
+  void initState() {
+    _fetchingData = true;
+    _populateDoors();
+    super.initState();
   }
 
-  Future<DoorResult> _callDoorOpener() async {
-    logger.i("Open door!");
-    String url = 'https://agile-reaches-36891.herokuapp.com/api/open/';
-    Map<String, String> headers = {"Content-type": "application/json"};
-    String username = await Storage.readValue("username");
-    String password = await Storage.readValue("password");
-    String key = "1";
-    String jsonBody =
-        '{"username": "' + username + '", "password": "' + password + '", "key":"' + key + '"}';
-    logger.i(jsonBody);
+  void _populateDoors() async {
+    //todo implment with webservice
     http.Response response;
     try {
-      response = await http.post(url, headers: headers, body: jsonBody);
+      response = await http.get(
+          'https://agile-reaches-36891.herokuapp.com/api/doors/',
+          headers: {"Accept": "application/json"});
     } catch (err) {
-      throw Exception("Failed to connect to server...");
+      throw Exception(err.toString());
     }
     logger.i(response.statusCode);
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
-      return DoorResult.fromJson(json.decode(response.body));
+      final result = json.decode(response.body);
+      Iterable list = result['doors'];
+      List<Door> doors = list.map((model) => Door.fromJson(model)).toList();
+      logger.i(doors.toString());
+      setState(() {
+        _fetchingData=false;
+        _doors = doors;
+      });
     } else {
       // If that response was not OK, throw an error.
       throw Exception('Failed to load post');
@@ -177,59 +162,36 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     }
   }
 
+  Container _buildItemsForListView(BuildContext context, int index) {
+      return Container(
+        child:Center(child:OpenButton(door:_doors[index], size:240))//OpenButton(door:_doors[index])
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget openOrSettings;
 
     if (!this._showingSettings) {
-      Widget widgetToShow;
-      if (_doorResult != null) {
-        widgetToShow = Result(
-            success: _doorResult != null ? _doorResult.succes : false,
-            text: _doorResult != null ? _doorResult.text : "An error occured");
-      } else if (_fetchingData) {
-        widgetToShow = Loading(
-            backgroundColor: Colors.transparent,
-            loadingColor: Theme.of(context).accentColor,
-            text: "Trying to open your door");
-      } else {
-        widgetToShow = Column(
-          
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              GestureDetector(
-                  onTap: _openDoor,
-                  child: Container(
-                    height: 240.0,
-                    width: 240.0,
-                    decoration: new BoxDecoration(
-                        image: DecorationImage(
-                          image: new AssetImage('images/door.png'),
-                          fit: BoxFit.fill,
-                        ),
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).accentColor),
-                  )),
-                  SizedBox(height: 40),
-                   Container(
-                    height: 80.0,
-                    width: 80.0,
-                    
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).accentColor),
-                        child:IconButton(
-                          icon: Icon(Icons.settings,color: Colors.black,),onPressed: this._toggleSettings,
-                        ))
-                  
-              /*FlatButton(
-              onPressed: _openDoor,
-              color: Theme.of(context).accentColor,
-              textColor: Theme.of(context).backgroundColor,
-              child: Text("Open the door"),
-            )*/
-            ]);
-      }
+      
+      Widget widgetToShow = Column(children:<Widget>[ListView.separated(
+        padding: const EdgeInsets.all(8),
+        shrinkWrap: true,
+
+          itemCount: _doors.length,
+          itemBuilder: _buildItemsForListView,
+          separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.transparent,),
+        ), Container(
+                          height: 80.0,
+                          width: 80.0,
+                          
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).accentColor),
+                              child:IconButton(
+                                icon: Icon(Icons.settings,color: Colors.black,),onPressed: this._toggleSettings,
+                              ))]);
+      
 
       openOrSettings = AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
@@ -249,72 +211,56 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: widgetToShow);
     } else {
       openOrSettings = Column(
-          
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Settings(),
-              SizedBox(height:40),
-              Container(
-                    height: 80.0,
-                    width: 80.0,
-                    
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).accentColor),
-                        child:IconButton(
-                          icon: Icon(Icons.arrow_back,color: Colors.black,),onPressed: this._toggleSettings,
-                        ))]);
-
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Settings(),
+            SizedBox(height: 40),
+            Container(
+                height: 80.0,
+                width: 80.0,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Theme.of(context).accentColor),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
+                  onPressed: this._toggleSettings,
+                ))
+          ]);
     }
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-          backgroundColor: Theme.of(context).primaryColor,
-          
-          body: Center(
-            // Center is a layout widget. It takes a single child and positions it
-            // in the middle of the parent.
-            child: SingleChildScrollView(child:Column(
-              // Column is also layout widget. It takes a list of children and
-              // arranges them vertically. By default, it sizes itself to fit its
-              // children horizontally, and tries to be as tall as its parent.
-              //
-              // Invoke "debug painting" (press "p" in the console, choose the
-              // "Toggle Debug Paint" action from the Flutter Inspector in Android
-              // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-              // to see the wireframe for each widget.
-              //
-              // Column has various properties to control how it sizes itself and
-              // how it positions its children. Here we use mainAxisAlignment to
-              // center the children vertically; the main axis here is the vertical
-              // axis because Columns are vertical (the cross axis would be
-              // horizontal).
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 800),
-                    switchInCurve: Interval(
-                      0.5,
-                      1,
-                      curve: Curves.easeIn,
-                    ),
-                    switchOutCurve: Interval(
-                      0.5,
-                      1,
-                      curve: Curves.linear,
-                    ),
-                    child: openOrSettings),
-              ],
-            ),
-          ),
-          // This trailing comma makes auto-formatting nicer for build methods.
-        )));
+            backgroundColor: Theme.of(context).primaryColor,
+            body: Center(
+              // Center is a layout widget. It takes a single child and positions it
+              // in the middle of the parent.
+              child: SingleChildScrollView(
+                child: Column(
+                  
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        switchInCurve: Interval(
+                          0.5,
+                          1,
+                          curve: Curves.easeIn,
+                        ),
+                        switchOutCurve: Interval(
+                          0.5,
+                          1,
+                          curve: Curves.linear,
+                        ),
+                        child: openOrSettings),
+                  ],
+                ),
+              ),
+              // This trailing comma makes auto-formatting nicer for build methods.
+            )));
   }
 }
 

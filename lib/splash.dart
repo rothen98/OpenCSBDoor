@@ -44,7 +44,7 @@ Widget build(BuildContext context) {
       backgroundColor: Theme.of(context).backgroundColor,
     body: Center(
         child: Text(
-          "Open the door",
+          "Open the door!",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.title.copyWith(color: Theme.of(context).accentColor))
     ),

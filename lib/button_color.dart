@@ -26,7 +26,11 @@ class ChangeRaisedButtonColorState extends State<ChangeRaisedButtonColor>
   Animation _colorTween;
 
   
-
+  @override
+void dispose() {
+  _animationController.dispose();
+  super.dispose();
+}
   @override
   void initState() {
     _animationController =

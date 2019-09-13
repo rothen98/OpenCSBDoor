@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Result extends StatelessWidget {
-  Result({@required this.success, @required this.text});
+  Result({@required this.success, @required this.text, this.size=50});
   final bool success;
   final String text;
+  final double size;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,8 +21,8 @@ class Result extends StatelessWidget {
             children: <Widget>[
               Container(
                 margin: new EdgeInsets.only(bottom: 20.0),
-                height: 240,
-                width: 240,
+                height: this.size,
+                width: this.size,
                 decoration: new BoxDecoration(
                   image: DecorationImage(
                     image: new AssetImage(this.success
@@ -31,7 +32,7 @@ class Result extends StatelessWidget {
                   )
                 ),
               ),
-              Text(this.text)
+              Text(this.text, textAlign: TextAlign.center,)
             ]));
   }
 }
