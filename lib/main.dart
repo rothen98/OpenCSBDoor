@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
 
+import 'package:random_color/random_color.dart';
+  
+
 import 'splash.dart';
 import 'init.dart';
 import 'settings.dart';
@@ -20,7 +23,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
         title: 'Open CSB Door',
         theme: ThemeData(
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
             // or simply save your changes to "hot reload" in a Flutter IDE).
             // Notice that the counter didn't reset back to zero; the application
             // is not restarted.
-            primaryColor: Colors.blue[300],
+            primaryColor: Colors.blue[300], //#64B5F6
             accentColor: Colors.white,
             fontFamily: 'Montserrat',
             textTheme: TextTheme(
@@ -95,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   bool _fetchingData = false;
   List<Door> _doors = new List();
   bool _showingSettings = false;
+  RandomColor _randomColor = RandomColor();
 
   void _setFetchingData(bool status) {
     setState(() {
@@ -139,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       List<Door> doors = list.map((model) => Door.fromJson(model)).toList();
       //logger.i(doors.toString());
       setState(() {
-        _fetchingData=false;
+        _fetchingData = false;
         _doors = doors;
       });
     } else {
@@ -158,11 +161,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildItemsForListView(BuildContext context, int index) {
-      return Center(child:Container(
-        //height:240,
-        //width: 240,
-        child:OpenButton(door:_doors[index])//OpenButton(door:_doors[index])
-      ));
+    return Center(
+        child: Container(
+            //height:240,
+            //width: 240,
+            child:
+                OpenButton(door: _doors[index], backgroundColor:Colors.white/*_randomColor.randomColor(
+                  colorHue: ColorHue.custom(Range.staticValue(205)),
+                  colorBrightness: ColorBrightness.light,
+                  colorSaturation: ColorSaturation.highSaturation //OpenButton(door:_doors[index])
+            )*/)));
   }
 
   @override
@@ -170,98 +178,70 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Widget openOrSettings;
 
     if (!this._showingSettings) {
-
-      
-      
-      Widget widgetToShow = Container(height:700, width:400, child:CustomScrollView(
+      Widget widgetToShow = Container(
+          child: CustomScrollView(
         slivers: <Widget>[
           ///First sliver is the App Bar
           SliverAppBar(
-            ///Properties of app bar
-          
-            backgroundColor: Colors.white,
-            floating: false,
-            pinned: false,
-            expandedHeight: 100.0,
 
-            ///Properties of the App Bar when it is expanded
-            flexibleSpace: LayoutBuilder(
+              ///Properties of app bar
+
+              //backgroundColor: Colors.white,
+
+              floating: false,
+              pinned: false,
+              expandedHeight: 100.0,
+
+              ///Properties of the App Bar when it is expanded
+              flexibleSpace: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                 // print('constraints=' + constraints.toString());
                 double top = constraints.biggest.height;
                 return FlexibleSpaceBar(
                     centerTitle: true,
                     title: AnimatedOpacity(
-                        duration: Duration(milliseconds: 300),
-                        //opacity: top == 80.0 ? 1.0 : 0.0,
-                        opacity: 1.0,
-                        child: Text(
-                          top > 90 ? "Welcome!":"Open the door",
-                          style: TextStyle(fontSize: 12.0),
-                        )),
-                    background:Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black26,
-                      width: 1.0,
+                      duration: Duration(milliseconds: 300),
+                      //opacity: top == 80.0 ? 1.0 : 0.0,
+                      opacity: 1.0,
                     ),
-                  ),
-                )));
-              }/*FlexibleSpaceBar(
-              centerTitle: true,
-              title: Text(
-                "Open a door",
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    ),
-              ),
-              background: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black26,
-                      width: 1.0,
-                    ),
-                  ),
+                    background: Image.asset(
+                      'images/bannernewtwo.png',
+                      fit: BoxFit.contain,
+                    ));
+              }),
+              actions: <Widget>[
+                IconButton(
+                  iconSize: 40,
+                  icon: const Icon(Icons.settings),
+                  tooltip: 'Settings',
+                  onPressed: this._toggleSettings,
                 ),
-              ),*/
-            ),
-            actions: <Widget>[
-    IconButton(
-      icon: const Icon(Icons.settings),
-      tooltip: 'Settings',
-      onPressed: this._toggleSettings,
-    ),
-  ]
-          ),
-          SliverPadding(padding: EdgeInsets.only(top: 8.0),
-          sliver:
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-              ///no.of items in the horizontal axis
-              crossAxisCount: 2,
-            ),
-            ///Lazy building of list
-            delegate: SliverChildBuilderDelegate(
+              ]),
+              
+          SliverPadding(
+              padding: EdgeInsets.only(top:8, left:10,right:10),
+              sliver: SliverGrid(
+                
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+
+                  ///no.of items in the horizontal axis
+                  crossAxisCount: 2,
+                ),
+
+                ///Lazy building of list
+                delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                /// To convert this infinite list to a list with "n" no of items,
-                /// uncomment the following line:
-                /// if (index > n) return null;
-                return _buildItemsForListView(context,index);
-              },
-              /// Set childCount to limit no.of items
-               childCount: _doors.length,
-            ),
-          ))
+                    return _buildItemsForListView(context, index);
+                  },
+
+                  /// Set childCount to limit no.of items
+                  childCount: _doors.length,
+                ),
+              ))
         ],
       ));
-      
-      
 
       openOrSettings = widgetToShow;
     } else {
@@ -285,37 +265,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 ))
           ]);
     }
-    
+
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-            backgroundColor: Theme.of(context).primaryColor,
-            body: Center(
-              // Center is a layout widget. It takes a single child and positions it
-              // in the middle of the parent.
-              child: SingleChildScrollView(
-                child: Column(
-                  
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
-                        switchInCurve: Interval(
-                          0.5,
-                          1,
-                          curve: Curves.easeIn,
-                        ),
-                        switchOutCurve: Interval(
-                          0.5,
-                          1,
-                          curve: Curves.linear,
-                        ),
-                        child: openOrSettings),
-                  ],
+          backgroundColor: Theme.of(context).primaryColor,
+          body: Center(
+            child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                switchInCurve: Interval(
+                  0.5,
+                  1,
+                  curve: Curves.easeIn,
                 ),
-              ),
-              // This trailing comma makes auto-formatting nicer for build methods.
-            )));
+                switchOutCurve: Interval(
+                  0.5,
+                  1,
+                  curve: Curves.linear,
+                ),
+                child: openOrSettings),
+          ),
+          // This trailing comma makes auto-formatting nicer for build methods.
+        ));
   }
 }
 

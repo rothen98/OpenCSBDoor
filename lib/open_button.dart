@@ -13,8 +13,9 @@ final logger = Logger.Logger();
 
 class OpenButton extends StatefulWidget {
   final Door door;
+  final Color backgroundColor;
   
-  OpenButton({@required this.door});
+  OpenButton({@required this.door, this.backgroundColor=Colors.white});
 
   @override
   OpenButtonState createState() => new OpenButtonState();
@@ -125,8 +126,8 @@ class OpenButtonState extends State<OpenButton> {
               //height:240,
               //width: 240,
                 decoration: new BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: new BorderRadius.all(Radius.circular(40.0)),
+                  color: widget.backgroundColor,
+                  //borderRadius: new BorderRadius.all(Radius.circular(40.0)),
                 ),
                 //child:AnimatedSwitcher(
             child: widgetToShow,
