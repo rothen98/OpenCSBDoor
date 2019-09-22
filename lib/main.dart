@@ -5,14 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
-import 'package:open_csb_door/webservice.dart';
 
-import 'loading.dart';
-
-import 'result.dart';
 import 'splash.dart';
 import 'init.dart';
-import 'storage.dart';
 import 'settings.dart';
 import 'open_button.dart';
 import 'door.dart';
@@ -135,14 +130,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     } catch (err) {
       throw Exception(err.toString());
     }
-    logger.i(response.statusCode);
+    //logger.i(response.statusCode);
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
       final result = json.decode(response.body);
       Iterable list = result['doors'];
       List<Door> doors = list.map((model) => Door.fromJson(model)).toList();
-      logger.i(doors.toString());
+      //logger.i(doors.toString());
       setState(() {
         _fetchingData=false;
         _doors = doors;
@@ -162,10 +157,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     }
   }
 
-  Container _buildItemsForListView(BuildContext context, int index) {
-      return Container(
-        child:Center(child:OpenButton(door:_doors[index], size:240))//OpenButton(door:_doors[index])
-      );
+  Widget _buildItemsForListView(BuildContext context, int index) {
+      return Center(child:Container(
+        //height:240,
+        //width: 240,
+        child:OpenButton(door:_doors[index])//OpenButton(door:_doors[index])
+      ));
   }
 
   @override
@@ -173,42 +170,100 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     Widget openOrSettings;
 
     if (!this._showingSettings) {
-      
-      Widget widgetToShow = Column(children:<Widget>[ListView.separated(
-        padding: const EdgeInsets.all(8),
-        shrinkWrap: true,
 
-          itemCount: _doors.length,
-          itemBuilder: _buildItemsForListView,
-          separatorBuilder: (BuildContext context, int index) => const Divider(color: Colors.transparent,),
-        ), Container(
-                          height: 80.0,
-                          width: 80.0,
-                          
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).accentColor),
-                              child:IconButton(
-                                icon: Icon(Icons.settings,color: Colors.black,),onPressed: this._toggleSettings,
-                              ))]);
+      
+      
+      Widget widgetToShow = Container(height:700, width:400, child:CustomScrollView(
+        slivers: <Widget>[
+          ///First sliver is the App Bar
+          SliverAppBar(
+            ///Properties of app bar
+          
+            backgroundColor: Colors.white,
+            floating: false,
+            pinned: false,
+            expandedHeight: 100.0,
+
+            ///Properties of the App Bar when it is expanded
+            flexibleSpace: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                // print('constraints=' + constraints.toString());
+                double top = constraints.biggest.height;
+                return FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: AnimatedOpacity(
+                        duration: Duration(milliseconds: 300),
+                        //opacity: top == 80.0 ? 1.0 : 0.0,
+                        opacity: 1.0,
+                        child: Text(
+                          top > 90 ? "Welcome!":"Open the door",
+                          style: TextStyle(fontSize: 12.0),
+                        )),
+                    background:Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black26,
+                      width: 1.0,
+                    ),
+                  ),
+                )));
+              }/*FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(
+                "Open a door",
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    ),
+              ),
+              background: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black26,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+              ),*/
+            ),
+            actions: <Widget>[
+    IconButton(
+      icon: const Icon(Icons.settings),
+      tooltip: 'Settings',
+      onPressed: this._toggleSettings,
+    ),
+  ]
+          ),
+          SliverPadding(padding: EdgeInsets.only(top: 8.0),
+          sliver:
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+              ///no.of items in the horizontal axis
+              crossAxisCount: 2,
+            ),
+            ///Lazy building of list
+            delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                /// To convert this infinite list to a list with "n" no of items,
+                /// uncomment the following line:
+                /// if (index > n) return null;
+                return _buildItemsForListView(context,index);
+              },
+              /// Set childCount to limit no.of items
+               childCount: _doors.length,
+            ),
+          ))
+        ],
+      ));
+      
       
 
-      openOrSettings = AnimatedSwitcher(
-          duration: const Duration(milliseconds: 500),
-          switchInCurve: Interval(
-            0.1,
-            0.5,
-            curve: Curves.linear,
-          ),
-          switchOutCurve: Interval(
-            0.6,
-            1,
-            curve: Curves.linear,
-          ),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(child: child, scale: animation);
-          },
-          child: widgetToShow);
+      openOrSettings = widgetToShow;
     } else {
       openOrSettings = Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -13,8 +13,8 @@ final logger = Logger.Logger();
 
 class OpenButton extends StatefulWidget {
   final Door door;
-  final double size;
-  OpenButton({@required this.door, this.size=50});
+  
+  OpenButton({@required this.door});
 
   @override
   OpenButtonState createState() => new OpenButtonState();
@@ -101,39 +101,36 @@ class OpenButtonState extends State<OpenButton> {
           
           backgroundColor: Colors.transparent,
           loadingColor: Theme.of(context).backgroundColor,
-          text: "Trying to open your door",
-          size:140);
+          text: "Trying to open your door"
+          );
     } else if (_doorResult != null) {
       widgetToShow = Result(
           success: _doorResult != null ? _doorResult.succes : false,
-          text: _doorResult != null ? _doorResult.text : "An error occured",
-          size:140);
+          text: _doorResult != null ? _doorResult.text : "An error occured");
     } else {
       widgetToShow = Column(children: <Widget>[
         Text(widget.door.name),
-        Container(
-            height:200,
-            width:200,
+        Expanded(child:Container(
             decoration: new BoxDecoration(
               image: DecorationImage(
                 image: new AssetImage('images/door.png'),
-                fit: BoxFit.fill,
+                fit: BoxFit.fitHeight,
               ),
-            ))
+            )))
       ]);
     }
     return GestureDetector(
         onTap: !_tryingToOpen && _doorResult==null ? _openDoor : null,
         child: Container(
-              height:240,
-              width: 240,
+              //height:240,
+              //width: 240,
                 decoration: new BoxDecoration(
                   color: Theme.of(context).accentColor,
                   borderRadius: new BorderRadius.all(Radius.circular(40.0)),
                 ),
-                child:AnimatedSwitcher(
+                //child:AnimatedSwitcher(
             child: widgetToShow,
-            duration: const Duration(milliseconds: 500))
+            //duration: const Duration(milliseconds: 500))
             ));
   }
 }
