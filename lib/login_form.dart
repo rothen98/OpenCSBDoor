@@ -25,7 +25,7 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
+    return Center(
         child: Form(
               key: _formKey,
               child: Column(
