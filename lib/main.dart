@@ -19,6 +19,8 @@ void main() => runApp(MyApp());
 
 final logger = Logger.Logger();
 
+
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -147,7 +149,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       });
     } else {
       // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+      //throw Exception('Failed to load post');
+      setState(() {
+        _fetchingData = false;
+       
+      });
     }
   }
 
@@ -196,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               flexibleSpace: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                 // print('constraints=' + constraints.toString());
-                double top = constraints.biggest.height;
+                
                 return FlexibleSpaceBar(
                     centerTitle: true,
                     title: AnimatedOpacity(
@@ -298,13 +304,4 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 }
 
-class DoorResult {
-  final bool succes;
-  final String text;
 
-  DoorResult({this.succes, this.text});
-
-  factory DoorResult.fromJson(Map<String, dynamic> json) {
-    return DoorResult(succes: json['succes'], text: json['text']);
-  }
-}

@@ -8,6 +8,8 @@ import 'dart:convert';
 import 'loading.dart';
 import 'result.dart';
 import 'door.dart';
+import 'link_sharer.dart';
+import 'package:flip_card/flip_card.dart';
 
 final logger = Logger.Logger();
 
@@ -24,6 +26,8 @@ class OpenButton extends StatefulWidget {
 class OpenButtonState extends State<OpenButton> {
   bool _tryingToOpen = false;
   DoorResult _doorResult;
+  GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
+
  
 
   void _setTryingToOpen(bool status) {
@@ -94,12 +98,12 @@ class OpenButtonState extends State<OpenButton> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     Widget widgetToShow;
     if (_tryingToOpen) {
       widgetToShow = Loading(
-          
           backgroundColor: Colors.transparent,
           loadingColor: Theme.of(context).backgroundColor,
           text: "Trying to open your door"
@@ -110,7 +114,12 @@ class OpenButtonState extends State<OpenButton> {
           text: _doorResult != null ? _doorResult.text : "An error occured");
     } else {
       widgetToShow = Column(children: <Widget>[
-        Text(widget.door.name),
+        Row( children:<Widget> [Expanded(child:Text(widget.door.name, textAlign: TextAlign.center,)),
+        IconButton(
+          icon:Icon(Icons.share),
+        onPressed: () => cardKey.currentState.toggleCard(),)]
+        //child: Text('Toggle'),
+      ),
         Expanded(child: 
         /*FittedBox(child:FadeInImage.assetNetwork(
           placeholder: 'images/door.png',
@@ -127,7 +136,11 @@ class OpenButtonState extends State<OpenButton> {
             )))
       ]);
     }
-    return GestureDetector(
+    return FlipCard(
+    key: cardKey,
+    flipOnTouch: false,
+    front: 
+      GestureDetector(
         onTap: !_tryingToOpen && _doorResult==null ? _openDoor : null,
         child: Container(
               //height:240,
@@ -139,7 +152,15 @@ class OpenButtonState extends State<OpenButton> {
                 //child:AnimatedSwitcher(
             child: widgetToShow,
             //duration: const Duration(milliseconds: 500))
-            ));
+            )),
+    
+    back: Container(child:Column(children: <Widget>[
+      Expanded(child:LinkSharer(door:widget.door, backgroundColor: widget.backgroundColor,),
+      ),
+      RaisedButton(onPressed:  () => cardKey.currentState.toggleCard(),
+        child: Text('Back'),)])
+    
+  ));
   }
 }
 
