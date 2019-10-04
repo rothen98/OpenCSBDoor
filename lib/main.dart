@@ -219,12 +219,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ]),
               
           SliverPadding(
-              padding: EdgeInsets.only(top:8, left:10,right:10),
+              padding: EdgeInsets.only(top:8, left:5,right:5,bottom:8),
               sliver: SliverGrid(
                 
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
 
                   ///no.of items in the horizontal axis
                   crossAxisCount: 2,
@@ -239,13 +239,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   /// Set childCount to limit no.of items
                   childCount: _doors.length,
                 ),
-              ))
+              )),
+              SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Container(padding:EdgeInsets.only(top:20,bottom:20),color:Colors.blue[400], child: Text("This app was made by Tobias Lindroth",
+              textAlign:TextAlign.center, style:TextStyle(color: Colors.white)),),
+              
+            ],
+          )),
         ],
       ));
 
       openOrSettings = widgetToShow;
     } else {
-      openOrSettings = Column(
+      openOrSettings = SingleChildScrollView(child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Settings(),
@@ -263,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   ),
                   onPressed: this._toggleSettings,
                 ))
-          ]);
+          ]));
     }
 
     return WillPopScope(

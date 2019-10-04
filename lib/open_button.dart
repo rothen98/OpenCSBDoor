@@ -111,10 +111,17 @@ class OpenButtonState extends State<OpenButton> {
     } else {
       widgetToShow = Column(children: <Widget>[
         Text(widget.door.name),
-        Expanded(child:Container(
+        Expanded(child: 
+        /*FittedBox(child:FadeInImage.assetNetwork(
+          placeholder: 'images/door.png',
+          image: "https://agile-reaches-36891.herokuapp.com" +
+              (widget.door.image != null ? widget.door.image : ""),
+          fit: BoxFit.contain),fit:BoxFit.contain*/
+          Container(
             decoration: new BoxDecoration(
               image: DecorationImage(
-                image: new AssetImage('images/door.png'),
+                image: NetworkImage("https://agile-reaches-36891.herokuapp.com" +
+              (widget.door.image != null ? widget.door.image : "")),
                 fit: BoxFit.fitHeight,
               ),
             )))
