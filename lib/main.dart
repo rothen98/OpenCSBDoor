@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
+import 'package:open_csb_door/wide_button.dart';
 
 import 'package:random_color/random_color.dart';
   
@@ -12,7 +13,6 @@ import 'package:random_color/random_color.dart';
 import 'splash.dart';
 import 'init.dart';
 import 'settings.dart';
-import 'open_button.dart';
 import 'door.dart';
 
 void main() => runApp(MyApp());
@@ -39,11 +39,13 @@ class MyApp extends StatelessWidget {
             // is not restarted.
             primaryColor: Colors.blue[300], //#64B5F6
             accentColor: Colors.white,
-            fontFamily: 'Montserrat',
+            fontFamily: 'AdventPro',
             textTheme: TextTheme(
               headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-              title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+              title: TextStyle(fontSize: 24),
               body1: TextStyle(fontSize: 14.0),
+              button: TextStyle(fontSize: 20.0),
+              
             )),
 
         // Define the default font family.
@@ -169,14 +171,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   Widget _buildItemsForListView(BuildContext context, int index) {
     return Center(
         child: Container(
-            //height:240,
-            //width: 240,
+            height:100,
+            //width: 400,
+            padding: EdgeInsets.only(top: 10),
             child:
-                OpenButton(door: _doors[index], backgroundColor:Colors.white/*_randomColor.randomColor(
-                  colorHue: ColorHue.custom(Range.staticValue(205)),
-                  colorBrightness: ColorBrightness.light,
-                  colorSaturation: ColorSaturation.highSaturation //OpenButton(door:_doors[index])
-            )*/)));
+            WideButton(door: _doors[index], backgroundColor:Colors.white)
+               ));
   }
 
   @override
@@ -226,15 +226,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               
           SliverPadding(
               padding: EdgeInsets.only(top:8, left:5,right:5,bottom:8),
-              sliver: SliverGrid(
+              sliver: SliverList(
                 
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
-
-                  ///no.of items in the horizontal axis
-                  crossAxisCount: 2,
-                ),
+                
 
                 ///Lazy building of list
                 delegate: SliverChildBuilderDelegate(

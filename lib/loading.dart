@@ -10,23 +10,23 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
+      
         //height: this.size,
         //width:this.size,
         decoration: new BoxDecoration(
           color: this.backgroundColor,
         ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: /*Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               //Expanded(child:
               Expanded(
                   //padding: EdgeInsets.only(bottom: 20.0),
-                  child: SpinKitChasingDots(
+                  child: */SpinKitChasingDots(
                     color: this.loadingColor,
-                    size: 60,
-                  )),
-              Text(this.text)
-            ]));
+                    size: 40,
+                  )
+              //Text(this.text)
+    );
   }
 }
