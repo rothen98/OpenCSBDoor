@@ -94,12 +94,12 @@ class OpenViewState extends State<OpenView> {
           Row(crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
         expandedText,
         Expanded(
-            child: Center(
-                child: Result(
+            child: Center(child:Padding(padding:EdgeInsets.only(top:3,bottom: 3), child:
+                 Result(
                     success: _doorResult != null ? _doorResult.succes : false,
                     text: _doorResult != null
                         ? _doorResult.text
-                        : "An error occured")))
+                        : "An error occured"))))
       ]);
     } else {
       widgetToShow = Row(children: <Widget>[
