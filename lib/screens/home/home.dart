@@ -8,15 +8,6 @@ final logger = Logger.Logger();
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -30,11 +21,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _setFetchingData(bool status) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _fetchingData = status;
     });
   }
@@ -106,8 +92,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
               floating: false,
               pinned: false,
-              expandedHeight: 100.0,
-
+              expandedHeight: 70.0,
+              title: Text("Open The Door", textAlign: TextAlign.center,
+              style:Theme.of(context).textTheme.headline.copyWith(color:Colors.white)),
+              centerTitle: true,
               ///Properties of the App Bar when it is expanded
               flexibleSpace: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
@@ -120,10 +108,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       //opacity: top == 80.0 ? 1.0 : 0.0,
                       opacity: 1.0,
                     ),
-                    background: Image.asset(
+                    background: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor
+                  /*gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white,
+                      Colors.blue,
+                    ],
+                  ),*/
+                ),
+              ), /*Image.asset(
                       'images/bannernewtwo.png',
                       fit: BoxFit.contain,
-                    ));
+                    )*/);
               }),
               actions: <Widget>[
                 IconButton(
@@ -137,9 +137,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           SliverPadding(
               padding: EdgeInsets.only(top:8, left:5,right:5,bottom:8),
               sliver: SliverList(
-                
-                
-
                 ///Lazy building of list
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {

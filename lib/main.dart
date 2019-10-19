@@ -1,14 +1,7 @@
-import 'dart:convert';
-
-
-
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
 import 'screens/home/home.dart';
-
-
-  
 
 import 'screens/init/init.dart';
 import 'screens/splash/splash.dart';
@@ -31,7 +24,7 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.white,
             fontFamily: 'AdventPro',
             textTheme: TextTheme(
-              headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline: TextStyle(fontSize: 48.0),
               title: TextStyle(fontSize: 24),
               body1: TextStyle(fontSize: 14.0),
               button: TextStyle(fontSize: 20.0,),
