@@ -6,29 +6,38 @@ import '../../widgets/circle_and_square.dart';
 import '../../widgets/login_form.dart';
 import '../../util/constants.dart';
 
-
 final logger = Logger.Logger();
 
 class Init extends StatelessWidget {
-  final Route homeWidgetRoute;
-
-  Init({@required this.homeWidgetRoute});
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).primaryColor,
         body: new Center(
-            child: SquareInCircle(widgetChild: LoginForm(
-                          onDone: (result) async {
-                            await Storage.writeValue(
-                                Constants.STORAGE_KEY_USERNAME, result.username);
-                            await Storage.writeValue(
-                                Constants.STORAGE_KEY_PASSWORD, result.password);
-                            Navigator.of(context).pushReplacement(
-                               this.homeWidgetRoute);
-                          },
-                          buttonText: "Done",
-                        ))));
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Please enter your CSB credentials", style:Theme.of(context).textTheme.title),
+                  SizedBox(height:30),
+              Container(
+                margin: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.all(10),
+                child: LoginForm(
+                  onDone: (result) async {
+                    await Storage.writeValue(
+                        Constants.STORAGE_KEY_USERNAME, result.username);
+                    await Storage.writeValue(
+                        Constants.STORAGE_KEY_PASSWORD, result.password);
+                    Navigator.pushReplacementNamed(
+                        context, Constants.HOME_ROUTE);
+                  },
+                  buttonText: "Done",
+                ),
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
+                ),
+              )
+            ])));
   }
 }

@@ -25,7 +25,7 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(padding:EdgeInsets.all(5),
         child: Form(
               key: _formKey,
               child: Column(
@@ -72,7 +72,8 @@ class LoginFormState extends State<LoginForm> {
                   SizedBox(
                   height: 15,
                 ),
-                  ChangeRaisedButtonColor(
+                  FlatButton(
+                    color:Colors.blue[300],
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -85,8 +86,7 @@ class LoginFormState extends State<LoginForm> {
                       }
                       return false;
                     },
-                  fromColor: Colors.blue,
-                  toColor: Colors.green,
+                  
                   
                   child: Text(
                     widget.buttonText,

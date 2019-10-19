@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_csb_door/util/constants.dart';
 import '../../models/door.dart';
 import 'widgets/settings.dart';
 import '../../services/webservice.dart';
@@ -130,7 +131,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   iconSize: 40,
                   icon: const Icon(Icons.settings),
                   tooltip: 'Settings',
-                  onPressed: this._toggleSettings,
+                  onPressed: (){Navigator.pushNamed(context, Constants.SETTINGS_ROUTE);},//this._toggleSettings,
                 ),
               ]),
               

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
+import 'package:open_csb_door/services/routing.dart';
+import 'package:open_csb_door/util/constants.dart';
 import 'screens/home/home.dart';
 
 import 'screens/init/init.dart';
@@ -31,14 +33,15 @@ class MyApp extends StatelessWidget {
             )),
 
         // Define the default font family.
-
-        home: Splash(
+        onGenerateRoute: Router.generateRoute,
+        initialRoute: Constants.SPLASH_ROUTE,
+        /*home: Splash(
           initWidgetRoute: _createRoute(Init(
               homeWidgetRoute:
                   _createRoute(HomePage(title: 'Open CSB Door')))),
           ordinaryWidgetRoute: _createRoute(HomePage(title: 'Open CSB Door')),
           haveBeenEntered: ["username", "password"],
-        ));
+        )*/);
   }
 
   Route _createRoute(Widget widget) {

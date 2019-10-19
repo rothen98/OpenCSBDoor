@@ -2,15 +2,13 @@ import 'dart:async';
 import 'package:logger/logger.dart' as Logger;
 import 'package:flutter/material.dart';
 import 'package:open_csb_door/services/storage.dart';
+import 'package:open_csb_door/util/constants.dart';
 
 
 final logger = Logger.Logger();
 
 class Splash extends StatefulWidget {
-  final Route initWidgetRoute;
-  final Route ordinaryWidgetRoute;
-  final List<String> haveBeenEntered;
-  Splash({@required this.initWidgetRoute, @required this.ordinaryWidgetRoute, @required this.haveBeenEntered});
+  
 
 @override
 SplashState createState() => new SplashState();
@@ -18,15 +16,13 @@ SplashState createState() => new SplashState();
 
 class SplashState extends State<Splash> {
 Future checkFirstSeen() async {
-    //await storage.deleteAll();
-    bool entered = await Storage.doesValuesExist(widget.haveBeenEntered);
+    await storage.deleteAll();
+    bool entered = await Storage.doesValuesExist([Constants.STORAGE_KEY_USERNAME,Constants.STORAGE_KEY_PASSWORD]);
     
     if (entered) {
-    Navigator.of(context).pushReplacement(
-        widget.ordinaryWidgetRoute);
+    Navigator.pushReplacementNamed(context, Constants.HOME_ROUTE);
     } else {
-    Navigator.of(context).pushReplacement(
-        widget.initWidgetRoute);
+    Navigator.pushReplacementNamed(context, Constants.INIT_ROUTE);
     }
 }
 
