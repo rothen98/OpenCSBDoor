@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:logger/logger.dart' as Logger;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'storage.dart';
-import 'dart:convert';
+import '../../../services/webservice.dart';
+import '../../../util/constants.dart';
+import '../../../services/storage.dart';
+import '../../../models/door.dart';
 
+import 'dart:convert';
 import 'loading.dart';
 import 'result.dart';
-import 'door.dart';
-import 'link_sharer.dart';
 import 'package:flip_card/flip_card.dart';
 
 final logger = Logger.Logger();
@@ -54,52 +54,19 @@ class OpenViewState extends State<OpenView> {
 
   _openDoor() async {
     _setTryingToOpen(true);
-
-    _callDoorOpener().then((result) {
-      _setDoorResultReceived(result);
-      //_showTheDialog(result.succes, result.text);
-    }, onError: (err) {
-      _setDoorResultReceived(
+    Webservice().post(DoorResult.open(await Storage.readValue(Constants.STORAGE_KEY_USERNAME),
+     await Storage.readValue(Constants.STORAGE_KEY_PASSWORD), widget.door.key)).then((result){
+       _setDoorResultReceived(result);
+     }).catchError((err){
+       _setDoorResultReceived(
           new DoorResult(succes: false, text: err.toString()));
-      //_showTheDialog(false, "An error occured");
-    }).then((result) {
+     }).then((result) {
       Future.delayed(const Duration(milliseconds: 5000), () {
         _removeDoorResult();
       });
     });
   }
 
-  Future<DoorResult> _callDoorOpener() async {
-    logger.i("Open door!");
-    String url = 'https://agile-reaches-36891.herokuapp.com/api/open/';
-    Map<String, String> headers = {"Content-type": "application/json"};
-    String username = await Storage.readValue("username");
-    String password = await Storage.readValue("password");
-    String key = widget.door.key;
-    String jsonBody = '{"username": "' +
-        username +
-        '", "password": "' +
-        password +
-        '", "key":"' +
-        key +
-        '"}';
-    logger.i(jsonBody);
-    http.Response response;
-    try {
-      response = await http.post(url, headers: headers, body: jsonBody);
-    } catch (err) {
-      throw Exception(err.toString());
-    }
-    logger.i(response.statusCode);
-
-    if (response.statusCode == 200) {
-      // If server returns an OK response, parse the JSON.
-      return DoorResult.fromJson(json.decode(response.body));
-    } else {
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,5 +141,19 @@ class DoorResult {
 
   factory DoorResult.fromJson(Map<String, dynamic> json) {
     return DoorResult(succes: json['succes'], text: json['text']);
+  }
+
+  static PostResource<DoorResult> open (String username, String password, String key){
+    
+    return PostResource(
+      url: Constants.POST_OPEN_URL,
+      parse: (response) {
+        final result = json.decode(response.body); 
+        return DoorResult.fromJson(result);
+      },
+      //headers: {"Content-type": "application/json"},
+      body: {"username":username, "password":password, "key":key}
+    );
+
   }
 }

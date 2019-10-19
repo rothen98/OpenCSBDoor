@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:logger/logger.dart' as Logger;
 import 'package:flutter/material.dart';
+import 'package:open_csb_door/services/storage.dart';
 
-import 'storage.dart';
 
 final logger = Logger.Logger();
 

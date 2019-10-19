@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
-import 'storage.dart';
-import 'login_form.dart';
-import 'circle_and_square.dart';
+import '../../../services/storage.dart';
+import '../../../util/constants.dart';
+import '../../../widgets/login_form.dart';
+import '../../../widgets/circle_and_square.dart';
 
 final logger = Logger.Logger();
 
@@ -14,8 +15,8 @@ class Settings extends StatelessWidget {
         child: SquareInCircle(
             widgetChild: LoginForm(
       onDone: (result) async {
-        await Storage.writeValue("username", result.username);
-        await Storage.writeValue("password", result.password);
+        await Storage.writeValue(Constants.STORAGE_KEY_USERNAME, result.username);
+        await Storage.writeValue(Constants.STORAGE_KEY_PASSWORD, result.password);
       },
       buttonText: "Change CSB credentials",
     )));
