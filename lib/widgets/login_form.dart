@@ -73,7 +73,7 @@ class LoginFormState extends State<LoginForm> {
                   height: 15,
                 ),
                   FlatButton(
-                    color:Colors.blue[300],
+                    color:Theme.of(context).colorScheme.primary,
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -90,7 +90,7 @@ class LoginFormState extends State<LoginForm> {
                   
                   child: Text(
                     widget.buttonText,
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.button.copyWith(color:Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
                   

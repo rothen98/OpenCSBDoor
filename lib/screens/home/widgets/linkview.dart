@@ -129,7 +129,7 @@ class LinkViewState extends State<LinkView> {
     if (_tryingToFetchLink) {
       return Loading(
           backgroundColor: Colors.transparent,
-          loadingColor: Theme.of(context).backgroundColor,
+          loadingColor: Theme.of(context).colorScheme.onSurface,
           text: "Trying to fetch a link to open your door");
     }else if (_linkResult != null) {
       return Row(
@@ -169,7 +169,7 @@ class LinkViewState extends State<LinkView> {
                   
                   ]),
                   GestureDetector(
-                      child:Text("Change", style:Theme.of(context).textTheme.button.copyWith(color:Colors.blue)),
+                      child:Text("Change", style:Theme.of(context).textTheme.button.copyWith(color:Theme.of(context).colorScheme.onSurface)),
                       onTap:(){this.showPickerNumber(context);}),
                   
                 ]),
@@ -177,7 +177,7 @@ class LinkViewState extends State<LinkView> {
                 padding: EdgeInsets.only(right: 20),
                 child: GestureDetector(
                   onTap: this._getLink,
-                  child: Text("Get Link",style:(Theme.of(context).textTheme.button).copyWith(color: Colors.blue)),
+                  child: Text("Get Link",style:(Theme.of(context).textTheme.button).copyWith(color:Theme.of(context).colorScheme.onSurface)),
                 ))
           ]);
     }

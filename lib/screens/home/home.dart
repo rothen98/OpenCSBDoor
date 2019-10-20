@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _fetchingData = false;
   List<Door> _doors = new List();
-  bool _showingSettings = false;
+
 
   void _setFetchingData(bool status) {
     setState(() {
@@ -26,11 +26,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  _toggleSettings() {
-    setState(() {
-      _showingSettings = !_showingSettings;
-    });
-  }
+  
 
   @override
   void initState() {
@@ -56,14 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     
   }
 
-  Future<bool> _onWillPop() async {
-    if (_showingSettings) {
-      _toggleSettings();
-      return false;
-    } else {
-      return true;
-    }
-  }
+  
 
   Widget _buildItemsForListView(BuildContext context, int index) {
     return Center(
@@ -72,15 +61,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             //width: 400,
             padding: EdgeInsets.only(top: 10),
             child:
-            WideButton(door: _doors[index], backgroundColor:Colors.white)
+            WideButton(door: _doors[index], backgroundColor:Theme.of(context).colorScheme.surface)
                ));
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget openOrSettings;
+    
 
-    if (!this._showingSettings) {
+   
       Widget widgetToShow = Container(
           child: CustomScrollView(
         slivers: <Widget>[
@@ -90,12 +79,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ///Properties of app bar
 
               //backgroundColor: Colors.white,
-
+              backgroundColor: Theme.of(context).colorScheme.background,
               floating: false,
               pinned: false,
               expandedHeight: 70.0,
               title: Text("Open The Door", textAlign: TextAlign.center,
-              style:Theme.of(context).textTheme.headline.copyWith(color:Colors.white)),
+              style:Theme.of(context).textTheme.headline.copyWith( color:Theme.of(context).colorScheme.onBackground)),
               centerTitle: true,
               ///Properties of the App Bar when it is expanded
               flexibleSpace: LayoutBuilder(
@@ -111,7 +100,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     background: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor
+                  color: Theme.of(context).colorScheme.background
                   /*gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -121,10 +110,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ],
                   ),*/
                 ),
-              ), /*Image.asset(
-                      'images/bannernewtwo.png',
-                      fit: BoxFit.contain,
-                    )*/);
+              ), );
               }),
               actions: <Widget>[
                 IconButton(
@@ -151,57 +137,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               SliverList(
           delegate: SliverChildListDelegate(
             [
-              Container(padding:EdgeInsets.only(top:20,bottom:20),color:Colors.blue[400], child: Text("This app was made by Tobias Lindroth",
-              textAlign:TextAlign.center, style:TextStyle(color: Colors.white)),),
+              Container(padding:EdgeInsets.only(top:20,bottom:20),color:Theme.of(context).colorScheme.primaryVariant, child: Text("This app was made by Tobias Lindroth",
+              textAlign:TextAlign.center, style:TextStyle(color: Theme.of(context).colorScheme.onPrimary)),),
               
             ],
           )),
         ],
       ));
 
-      openOrSettings = widgetToShow;
-    } else {
-      openOrSettings = SingleChildScrollView(child:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Settings(),
-            SizedBox(height: 40),
-            Container(
-                height: 80.0,
-                width: 80.0,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).accentColor),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                  ),
-                  onPressed: this._toggleSettings,
-                ))
-          ]));
-    }
+      
+    
+    
 
-    return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          backgroundColor: Theme.of(context).primaryColor,
+    return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
           body: Center(
-            child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                switchInCurve: Interval(
-                  0.5,
-                  1,
-                  curve: Curves.easeIn,
-                ),
-                switchOutCurve: Interval(
-                  0.5,
-                  1,
-                  curve: Curves.linear,
-                ),
-                child: openOrSettings),
-          ),
+            child:  widgetToShow),
+          
           // This trailing comma makes auto-formatting nicer for build methods.
-        ));
+        );
   }
 }

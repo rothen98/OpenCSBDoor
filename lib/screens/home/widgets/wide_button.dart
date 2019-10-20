@@ -36,7 +36,7 @@ class WideButtonState extends State<WideButton> {
           backgroundColor: this.widget.backgroundColor,
           child: OpenView(door: this.widget.door, switchView: this.switchView)),
       back: CardContainer(
-        backgroundColor: Colors.blue[100],
+        backgroundColor: Theme.of(context).colorScheme.surface,
         child: LinkView(door: this.widget.door, switchView: this.switchView),
       ),
     );

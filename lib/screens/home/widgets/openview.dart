@@ -76,7 +76,7 @@ class OpenViewState extends State<OpenView> {
             child: Text(
               widget.door.name,
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.title,
+              style: Theme.of(context).textTheme.title.copyWith(color:Theme.of(context).colorScheme.onSurface),
             )));
     Widget widgetToShow;
     if (_tryingToOpen) {
@@ -86,7 +86,7 @@ class OpenViewState extends State<OpenView> {
         Expanded(
             child: Loading(
                 backgroundColor: Colors.transparent,
-                loadingColor: Theme.of(context).backgroundColor,
+                loadingColor: Theme.of(context).colorScheme.onSurface,
                 text: "Trying to open your door"))
       ]);
     } else if (_doorResult != null) {
@@ -114,7 +114,7 @@ class OpenViewState extends State<OpenView> {
                  Center(
                    child: Text(
                      "Open",
-                     style:(Theme.of(context).textTheme.button).copyWith(color: Colors.green),))),
+                     style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.primary),))),
               ),
               VerticalDivider(width: 20, color: Colors.transparent),
               GestureDetector(
@@ -123,7 +123,7 @@ class OpenViewState extends State<OpenView> {
                       child: Center(
                     child: Text(
                       "Share Link",
-                      style:(Theme.of(context).textTheme.button).copyWith(color: Colors.blue),
+                      style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.primaryVariant),
                     ),
                   )))
             ]))
