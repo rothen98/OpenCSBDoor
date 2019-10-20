@@ -114,7 +114,7 @@ class OpenViewState extends State<OpenView> {
                  Center(
                    child: Text(
                      "Open",
-                     style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.primary),))),
+                     style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.secondary),))),
               ),
               VerticalDivider(width: 20, color: Colors.transparent),
               GestureDetector(
@@ -123,7 +123,7 @@ class OpenViewState extends State<OpenView> {
                       child: Center(
                     child: Text(
                       "Share Link",
-                      style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.primaryVariant),
+                      style:(Theme.of(context).textTheme.button).copyWith(color: Theme.of(context).colorScheme.secondaryVariant),
                     ),
                   )))
             ]))

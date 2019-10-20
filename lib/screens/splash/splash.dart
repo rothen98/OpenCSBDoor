@@ -16,7 +16,7 @@ SplashState createState() => new SplashState();
 
 class SplashState extends State<Splash> {
 Future checkFirstSeen() async {
-    //await storage.deleteAll();
+    await storage.deleteAll();
     bool entered = await Storage.doesValuesExist([Constants.STORAGE_KEY_USERNAME,Constants.STORAGE_KEY_PASSWORD]);
     
     if (entered) {

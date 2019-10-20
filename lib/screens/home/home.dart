@@ -101,21 +101,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     background: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.background
-                  /*gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white,
-                      Colors.blue,
-                    ],
-                  ),*/
                 ),
               ), );
               }),
               actions: <Widget>[
                 IconButton(
                   iconSize: 40,
-                  icon: const Icon(Icons.settings),
+                  icon: Icon(Icons.settings, color:Theme.of(context).colorScheme.onBackground ),
                   tooltip: 'Settings',
                   onPressed: (){Navigator.pushNamed(context, Constants.SETTINGS_ROUTE);},//this._toggleSettings,
                 ),

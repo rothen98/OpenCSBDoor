@@ -17,8 +17,8 @@ class Settings extends StatelessWidget {
     return new Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         body: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Padding(padding:EdgeInsets.only(top:10, bottom:5), child:Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(left: 10, right: 10),
@@ -39,38 +39,44 @@ class Settings extends StatelessWidget {
                 );
               }),
               decoration: new BoxDecoration(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
               ),
             ),
-            Container(height:300, child:Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: AppTheme.values.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Get theme enum for the current item index
-                  final theme = AppTheme.values[index];
-                  return Card(
-                    // Style the item with corresponding theme color
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: appThemeData[theme].colorScheme.onBackground)
-    ),
-                    color: appThemeData[theme].colorScheme.background,
-                    child: ListTile(
-                      onTap: () {
-                        // This will trigger notifyListeners and rebuild UI
-                        // because of ChangeNotifierProvider in ThemeApp
-                        Provider.of<ThemeManager>(context).setTheme(theme);
-                      },
-                      title: Text(
-                        enumName(theme),
-                        style: appThemeData[theme].textTheme.body1.copyWith(color:appThemeData[theme].colorScheme.onBackground),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )),
+            Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: AppTheme.values.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // Get theme enum for the current item index
+                      final theme = AppTheme.values[index];
+                      return Card(
+                        // Style the item with corresponding theme color
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                                color: appThemeData[theme]
+                                    .colorScheme
+                                    .onBackground)),
+                        color: appThemeData[theme].colorScheme.background,
+                        child: ListTile(
+                          onTap: () {
+                            // This will trigger notifyListeners and rebuild UI
+                            // because of ChangeNotifierProvider in ThemeApp
+                            Provider.of<ThemeManager>(context).setTheme(theme);
+                          },
+                          title: Text(
+                            enumName(theme),
+                            style: appThemeData[theme].textTheme.body1.copyWith(
+                                color: appThemeData[theme]
+                                    .colorScheme
+                                    .onBackground),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )),
             /*FlatButton(
               onPressed: () {
                 Provider.of<ThemeManager>(context).changeTheme();
@@ -89,6 +95,6 @@ class Settings extends StatelessWidget {
                       new Radius.circular(10.0),
                     ))),
           ],
-        )));
+        ))));
   }
 }

@@ -33,7 +33,7 @@ class Init extends StatelessWidget {
                   buttonText: "Done",
                 ),
                 decoration: new BoxDecoration(
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
                 ),
               )
