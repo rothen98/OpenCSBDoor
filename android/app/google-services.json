@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "530774998988",
+    "firebase_url": "https://opencsbdoor.firebaseio.com",
+    "project_id": "opencsbdoor",
+    "storage_bucket": "opencsbdoor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530774998988:android:246de056e2e79f5a42a769",
+        "android_client_info": {
+          "package_name": "com.example.open_csb_door"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530774998988-i828cs41p2pk71c5m49evlo68rjg7fhf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnYFYCDCazs0PY2Gs3oVrNYa-mBW8DIEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "530774998988-i828cs41p2pk71c5m49evlo68rjg7fhf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

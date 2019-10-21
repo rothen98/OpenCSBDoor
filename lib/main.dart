@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:logger/logger.dart' as Logger;
@@ -12,8 +13,65 @@ void main() => runApp(MyApp());
 
 final logger = Logger.Logger();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _PushMessagingExampleState createState() => _PushMessagingExampleState();
+}
+
+class _PushMessagingExampleState extends State<MyApp> {
+  String _homeScreenText = "Waiting for token...";
+  String _messageText = "Waiting for message...";
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        setState(() {
+          _messageText = "Push Messaging message: $message";
+        });
+        print("HAllååå");
+        print("onMessage: $message");
+        _showItemDialog(message);
+        /**/
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        setState(() {
+          _messageText = "Push Messaging message: $message";
+        });
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        setState(() {
+          _messageText = "Push Messaging message: $message";
+        });
+        print("onResume: $message");
+      },
+      onBackgroundMessage: _backgroundMessageHandler,
+    );
+  }
+
+  void _showItemDialog(Map<String,dynamic> message){
+    print("Show dialog!");
+    print(message['notification']['title']);
+    showDialog(
+          context: context,
+          builder: (context) { return AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );},
+        );
+  }
+
   @override
   Widget build(BuildContext buildcontext) {
     return ChangeNotifierProvider(
@@ -29,5 +87,20 @@ class MyApp extends StatelessWidget {
             initialRoute: Constants.SPLASH_ROUTE,
           );
         }));
+  }
+}
+
+Future<dynamic> _backgroundMessageHandler(Map<String, dynamic> message) {
+  print("_backgroundMessageHandler");
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+    print("_backgroundMessageHandler data: ${data}");
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print("_backgroundMessageHandler notification: ${notification}");
   }
 }
