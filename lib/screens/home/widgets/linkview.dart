@@ -218,7 +218,7 @@ class LinkResult {
   LinkResult({this.succes, this.link});
 
   factory LinkResult.fromJson(Map<String, dynamic> json) {
-    return LinkResult(succes: json['succes'], link: json['result']);
+    return LinkResult(succes: json['status']=="success", link: json['data']['result']);
   }
   static PostResource<LinkResult> createLink(
       String username, String password, String key, String hours, String uses) {

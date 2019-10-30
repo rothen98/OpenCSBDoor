@@ -26,6 +26,10 @@ class _PushMessagingExampleState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+    _firebaseMessaging.getToken().then((token){
+      print(token);
+    });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         setState(() {

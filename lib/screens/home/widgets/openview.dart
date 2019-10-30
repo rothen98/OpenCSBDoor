@@ -140,7 +140,7 @@ class DoorResult {
   DoorResult({this.succes, this.text});
 
   factory DoorResult.fromJson(Map<String, dynamic> json) {
-    return DoorResult(succes: json['succes'], text: json['text']);
+    return DoorResult(succes: json['status']=="success", text: json['data']['text']);
   }
 
   static PostResource<DoorResult> open (String username, String password, String key){

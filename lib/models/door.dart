@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:open_csb_door/util/constants.dart';
 import 'package:open_csb_door/services/webservice.dart';
 
@@ -20,7 +21,7 @@ class Door{
       url: Constants.GET_DOORS_URL,
       parse: (response) {
         final result = json.decode(response.body); 
-        Iterable list = result['doors'];
+        Iterable list = result['data']['doors'];
         return list.map((model) => Door.fromJson(model)).toList();
       }
     );

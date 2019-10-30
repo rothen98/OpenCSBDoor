@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:open_csb_door/util/constants.dart';
 import '../../models/door.dart';
-import 'widgets/settings.dart';
 import '../../services/webservice.dart';
 import 'package:logger/logger.dart' as Logger;
 import 'widgets/wide_button.dart';
@@ -36,7 +35,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _populateDoors() async {
-    //todo implment with webservice
     Webservice().load(Door.all).then((doors){
       setState(() {
         _fetchingData = false;
