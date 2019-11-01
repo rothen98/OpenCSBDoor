@@ -1,5 +1,6 @@
 import 'package:logger/logger.dart' as Logger;
 import 'package:flutter/material.dart';
+import 'package:open_csb_door/widgets/token_inherited.dart';
 import '../../../util/constants.dart';
 import '../../../services/webservice.dart';
 import '../../../services/storage.dart';
@@ -107,7 +108,7 @@ class LinkViewState extends State<LinkView> {
 
   _getLink() async {
     _setTryingToFetchLink(true);
-
+    print(InheritedToken.of(context).token);
     Webservice()
         .post(LinkResult.createLink(
             await Storage.readValue("username"),

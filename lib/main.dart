@@ -6,6 +6,7 @@ import 'package:open_csb_door/services/routing.dart';
 import 'package:open_csb_door/services/theme_manager.dart';
 //import 'package:open_csb_door/services/theme.dart';
 import 'package:open_csb_door/util/constants.dart';
+import 'package:open_csb_door/widgets/token_inherited.dart';
 import 'package:provider/provider.dart';
 //import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatefulWidget {
 class _PushMessagingExampleState extends State<MyApp> {
   String _homeScreenText = "Waiting for token...";
   String _messageText = "Waiting for message...";
+  String _token = null;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
@@ -29,6 +31,9 @@ class _PushMessagingExampleState extends State<MyApp> {
 
     _firebaseMessaging.getToken().then((token){
       print(token);
+      setState(() {
+       _token=token; 
+      });;
     });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -78,7 +83,7 @@ class _PushMessagingExampleState extends State<MyApp> {
 
   @override
   Widget build(BuildContext buildcontext) {
-    return ChangeNotifierProvider(
+    return InheritedToken(this._token, ChangeNotifierProvider(
         //Here we provide our ThemeManager to child widget tree
         builder: (_) => ThemeManager(),
         //Consumer will call builder method each time ThemeManager calls notifyListeners()
@@ -90,7 +95,7 @@ class _PushMessagingExampleState extends State<MyApp> {
             onGenerateRoute: Router.generateRoute,
             initialRoute: Constants.SPLASH_ROUTE,
           );
-        }));
+        })));
   }
 }
 

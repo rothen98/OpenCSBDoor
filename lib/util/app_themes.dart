@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum AppTheme { Standard, Marsala, Dark, Uddjaur, Uddjaur2 }
+enum AppTheme { Standard, Marsala, Dark, Uddjaur }
 
 /// Returns enum value name without enum class name.
 String enumName(AppTheme anyEnum) {
@@ -72,23 +72,8 @@ final appThemeData = {
     onSurface: Color(0xff6E7E85),
     brightness: Brightness.dark,
   )),
+  
   AppTheme.Uddjaur: base.copyWith(
-      colorScheme: ColorScheme(
-    primary: Color(0xff95BC6D),
-    onPrimary: Colors.white,
-    primaryVariant: Color(0xff939958),
-    background: Color(0xff95BC6D),
-    onBackground: Colors.white,
-    secondary: Color(0xffD4CBE5),
-    onSecondary: Colors.white,
-    secondaryVariant: Color(0xffB8B1C6),
-    error: Colors.red,
-    onError: Colors.black,
-    surface: Colors.white,
-    onSurface: Color(0xff95BC6D),
-    brightness: Brightness.light,
-  )),
-  AppTheme.Uddjaur2: base.copyWith(
       colorScheme: ColorScheme(
     primary: Colors.white,
     onPrimary: Color(0xff99D65C),
