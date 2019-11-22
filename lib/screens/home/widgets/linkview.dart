@@ -108,14 +108,14 @@ class LinkViewState extends State<LinkView> {
 
   _getLink() async {
     _setTryingToFetchLink(true);
-    print(InheritedToken.of(context).token);
     Webservice()
         .post(LinkResult.createLink(
             await Storage.readValue("username"),
             await Storage.readValue("password"),
             widget.door.key,
             _nrOfHours.toString(),
-            _nrOfUses.toString()))
+            _nrOfUses.toString(),
+            InheritedToken.of(context).token))
         .then((result) {
       _setLinkResultReceived(result);
     }).catchError((err) {
@@ -222,7 +222,7 @@ class LinkResult {
     return LinkResult(succes: json['status']=="success", link: json['data']['result']);
   }
   static PostResource<LinkResult> createLink(
-      String username, String password, String key, String hours, String uses) {
+      String username, String password, String key, String hours, String uses, String device) {
     return PostResource(
         url: Constants.POST_CREATE_LINK_URL,
         parse: (response) {
@@ -235,7 +235,8 @@ class LinkResult {
           "password": password,
           "doorkey": key,
           "hours": hours,
-          "uses": uses
+          "uses": uses,
+          "device":device
         });
   }
 }
