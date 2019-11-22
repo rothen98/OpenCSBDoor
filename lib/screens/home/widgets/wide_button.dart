@@ -54,7 +54,14 @@ class CardContainer extends StatelessWidget {
     return Container(
         child: this.child,
         decoration: new BoxDecoration(
-            color: this.backgroundColor,
-            borderRadius: new BorderRadius.all(const Radius.circular(20.0))));
+          color: this.backgroundColor,
+          borderRadius: new BorderRadius.all(const Radius.circular(20.0)),
+          boxShadow: [
+            new BoxShadow(
+              color: Color(0x55000000),
+              offset: new Offset(3.0, 5.0),
+            )
+          ],
+        ));
   }
 }
