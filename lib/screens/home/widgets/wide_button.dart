@@ -46,8 +46,8 @@ class WideButtonState extends State<WideButton> {
 class CardContainer extends StatelessWidget {
   CardContainer({@required this.child, @required this.backgroundColor});
 
-  Widget child;
-  Color backgroundColor;
+  final Widget child;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
