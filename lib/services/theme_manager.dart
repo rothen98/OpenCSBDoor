@@ -12,8 +12,6 @@ class ThemeManager with ChangeNotifier {
   }
 
   void _loadTheme() {
-    debugPrint("Entered loadTheme()");
-
     SharedPreferences.getInstance().then((prefs) {
       int preferredTheme = prefs.getInt(_kThemePreference) ?? 0;
       _themeData = appThemeData[AppTheme.values[preferredTheme]];
@@ -33,11 +31,9 @@ class ThemeManager with ChangeNotifier {
   /// Sets theme and notifies listeners about change.
   setTheme(AppTheme theme) async {
     _themeData = appThemeData[theme];
-
     // Here we notify listeners that theme changed
     // so UI have to be rebuild
     notifyListeners();
-
     var prefs = await SharedPreferences.getInstance();
     prefs.setInt(_kThemePreference, AppTheme.values.indexOf(theme));
   }

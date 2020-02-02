@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart' as Logger;
 import 'package:open_csb_door/services/routing.dart';
 import 'package:open_csb_door/services/theme_manager.dart';
-//import 'package:open_csb_door/services/theme.dart';
 import 'package:open_csb_door/util/constants.dart';
 import 'package:open_csb_door/widgets/token_inherited.dart';
 import 'package:provider/provider.dart';
-//import 'package:provider/provider.dart';
+
+/**
+ * This is the root of the application.
+ */
 
 void main() => runApp(MyApp());
 
 final logger = Logger.Logger();
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _PushMessagingExampleState createState() => _PushMessagingExampleState();
 }
@@ -23,7 +24,7 @@ class MyApp extends StatefulWidget {
 class _PushMessagingExampleState extends State<MyApp> {
   String _homeScreenText = "Waiting for token...";
   String _messageText = "Waiting for message...";
-  String _token = null;
+  String _token;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
@@ -33,14 +34,13 @@ class _PushMessagingExampleState extends State<MyApp> {
       print(token);
       setState(() {
        _token=token; 
-      });;
+      });
     });
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         setState(() {
           _messageText = "Push Messaging message: $message";
         });
-        print("HAllååå");
         print("onMessage: $message");
         _showItemDialog(message);
         /**/

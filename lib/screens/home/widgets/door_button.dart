@@ -10,17 +10,17 @@ import 'package:flip_card/flip_card.dart';
 
 final logger = Logger.Logger();
 
-class WideButton extends StatefulWidget {
+class DoorButton extends StatefulWidget {
   final Door door;
   final Color backgroundColor;
 
-  WideButton({@required this.door, this.backgroundColor = Colors.white});
+  DoorButton({@required this.door, this.backgroundColor = Colors.white});
 
   @override
-  WideButtonState createState() => new WideButtonState();
+  DoorButtonState createState() => new DoorButtonState();
 }
 
-class WideButtonState extends State<WideButton> {
+class DoorButtonState extends State<DoorButton> {
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   void switchView() {

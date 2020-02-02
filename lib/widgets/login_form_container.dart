@@ -1,4 +1,4 @@
-import 'dart:convert';
+/*import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
@@ -10,9 +10,10 @@ import '../../widgets/login_form.dart';
 import '../../util/constants.dart';
 
 final logger = Logger.Logger();
-
+typedef void OnDone();
 class InitPage extends StatefulWidget {
-  InitPage() : super();
+  final OnDone onDone;
+  InitPage(this.onDone);
 
   
 
@@ -119,5 +120,5 @@ class _InitPageState extends State<InitPage> {
             ])));
   }
 }
-
+*/
 

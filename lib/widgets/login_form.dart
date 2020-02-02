@@ -10,11 +10,13 @@ class LoginForm extends StatefulWidget {
   final BackFromLogin onDone;
   final String buttonText;
   final Color backgroundColor;
+  final bool disabled;
 
   LoginForm(
       {@required this.onDone,
       @required this.buttonText,
-      this.backgroundColor = Colors.white});
+      this.backgroundColor = Colors.white,
+      this.disabled = false});
 
   @override
   LoginFormState createState() => new LoginFormState();
@@ -48,15 +50,15 @@ class LoginFormState extends State<LoginForm> {
                         BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                    hintText: '10 digit Person number',
+                    /*hintText: '10 digit Person number',
                     hintStyle:
-                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                    labelText: 'Person number',
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),*/
+                    labelText: 'Social Security Number',
                     labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                     border: OutlineInputBorder()),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter your person number';
+                    return 'Please enter your social security number';
                   }
                   return null;
                 },
@@ -79,9 +81,9 @@ class LoginFormState extends State<LoginForm> {
                         BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 2.0),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                  hintText: 'Password',
+                  /*hintText: 'Password',
                   hintStyle:
-                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),*/
                   labelText: 'Enter your password',
                   labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   border: OutlineInputBorder(
@@ -106,7 +108,8 @@ class LoginFormState extends State<LoginForm> {
                 onPressed: () {
                   // Validate will return true if the form is valid, or false if
                   // the form is invalid.
-                  if (_formKey.currentState.validate()) {
+                  if(widget.disabled){return null;}
+                  else if (_formKey.currentState.validate()) {
                     _formKey.currentState.save();
                     widget.onDone(new LoginResult(
                         username: this._username, password: this._password));

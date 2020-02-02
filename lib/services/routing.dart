@@ -11,9 +11,9 @@ class Router {
       case Constants.HOME_ROUTE:
         return MaterialPageRoute(builder: (_) => HomePage());
       case Constants.INIT_ROUTE:
-        return MaterialPageRoute(builder: (_) => Init());
+        return MaterialPageRoute(builder: (_) => InitPage());
       case Constants.SETTINGS_ROUTE:
-        return routerBuilder(Settings());
+        return routerBuilder(SettingsPage());
         case Constants.SPLASH_ROUTE:
         return MaterialPageRoute(builder: (_) => Splash());
       default:
