@@ -11,5 +11,5 @@ class InheritedToken extends InheritedWidget {
     token != old.token;
 
   static InheritedToken of(BuildContext context) =>
-    context.inheritFromWidgetOfExactType(InheritedToken);
+    context.dependOnInheritedWidgetOfExactType<InheritedToken>();
 }
