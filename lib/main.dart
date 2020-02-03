@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:logger/logger.dart' as Logger;
 import 'package:open_csb_door/services/routing.dart';
@@ -83,6 +84,10 @@ class _PushMessagingExampleState extends State<MyApp> {
 
   @override
   Widget build(BuildContext buildcontext) {
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
     return InheritedToken(this._token, ChangeNotifierProvider(
         //Here we provide our ThemeManager to child widget tree
         builder: (_) => ThemeManager(),

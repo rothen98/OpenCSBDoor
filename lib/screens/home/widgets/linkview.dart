@@ -154,7 +154,8 @@ class LinkViewState extends State<LinkView> {
                     ? SelectableText(
                         Constants.LINK_OPENER_URL + _linkResult.link,
                         style: Theme.of(context).textTheme.body1.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface),
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 16),
                       )
                     : Text("Failed...",
                         style: Theme.of(context).textTheme.body1.copyWith(

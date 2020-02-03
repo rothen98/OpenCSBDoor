@@ -1,5 +1,5 @@
 name: open_csb_door
-description: A new Flutter project.
+description: An app for opening doors
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -23,7 +23,6 @@ dependencies:
   logger: ^0.6.0
   flutter_spinkit: "^4.0.0"
   flutter_secure_storage: ^3.2.1+1
-  random_color: ^1.0.3
   flip_card: ^0.4.3
   flutter_picker:
     git: git://github.com/yangyxd/flutter_picker.git

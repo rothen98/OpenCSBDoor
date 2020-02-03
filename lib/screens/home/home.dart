@@ -81,19 +81,6 @@ class HomePage extends StatelessWidget{
                 doors.map((d) => createDoorWidget(context, d)).toList()),
           ),
         ),
-        SliverList(
-            delegate: SliverChildListDelegate(
-          [
-            Container(
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              color: Theme.of(context).colorScheme.primaryVariant,
-              child: Text("This app was made by Tobias Lindroth",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
-            ),
-          ],
-        )),
       ],
     ));
   }

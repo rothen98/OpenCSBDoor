@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:530774998988:android:246de056e2e79f5a42a769",
         "android_client_info": {
-          "package_name": "com.example.open_csb_door"
+          "package_name": "com.rothen.open_csb_door"
         }
       },
       "oauth_client": [
