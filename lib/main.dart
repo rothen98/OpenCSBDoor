@@ -9,9 +9,7 @@ import 'package:open_csb_door/util/constants.dart';
 import 'package:open_csb_door/widgets/token_inherited.dart';
 import 'package:provider/provider.dart';
 
-/**
- * This is the root of the application.
- */
+///This is the root of the application.
 
 void main() => runApp(MyApp());
 

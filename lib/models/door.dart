@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
 import 'package:open_csb_door/util/constants.dart';
 import 'package:open_csb_door/services/webservice.dart';
 
