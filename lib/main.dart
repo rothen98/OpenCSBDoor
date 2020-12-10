@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:logger/logger.dart' as Logger;
-import 'package:open_csb_door/services/routing.dart';
+import 'package:open_csb_door/services/routing.dart' as Routing;
 import 'package:open_csb_door/services/theme_manager.dart';
 import 'package:open_csb_door/util/constants.dart';
 import 'package:open_csb_door/widgets/token_inherited.dart';
@@ -95,7 +95,7 @@ class _PushMessagingExampleState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Open CSB Door',
             theme: (manager.themeData),
-            onGenerateRoute: Router.generateRoute,
+            onGenerateRoute: Routing.Router.generateRoute,
             initialRoute: Constants.SPLASH_ROUTE,
           );
         })));

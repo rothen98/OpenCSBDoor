@@ -23,7 +23,7 @@ dependencies:
   logger: ^0.6.0
   flutter_spinkit: "^4.0.0"
   flutter_secure_storage: ^3.2.1+1
-  flip_card: ^0.4.3
+  flip_card: ^0.4.4
   flutter_picker:
     git: git://github.com/yangyxd/flutter_picker.git
   provider: ^3.0.0

@@ -139,10 +139,9 @@ class LinkViewState extends State<LinkView> {
               onPressed: () {
                 this.widget.switchView();
                 this._resetLinkResult();
-                
               },
               icon: Icon(Icons.arrow_back,
-                  color: Theme.of(context).colorScheme.onSurface),
+                  color: Theme.of(context).colorScheme.onError),
             ) /*GestureDetector(
                   onTap: this.widget.switchView,
                   child: new Text("Back"),
@@ -153,12 +152,12 @@ class LinkViewState extends State<LinkView> {
                 child: _linkResult.succes
                     ? SelectableText(
                         Constants.LINK_OPENER_URL + _linkResult.link,
-                        style: Theme.of(context).textTheme.body1.copyWith(
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 16),
                       )
                     : Text("Failed...",
-                        style: Theme.of(context).textTheme.body1.copyWith(
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
                             color: Theme.of(context).colorScheme.onSurface))))
       ]);
     } else {
@@ -187,7 +186,7 @@ class LinkViewState extends State<LinkView> {
                 children: <Widget>[
                   Row(children: <Widget>[
                     Text(usesAndHours,
-                        style: Theme.of(context).textTheme.subhead.copyWith(
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
                             color: Theme.of(context).colorScheme.onSurface))
                   ]),
                   GestureDetector(

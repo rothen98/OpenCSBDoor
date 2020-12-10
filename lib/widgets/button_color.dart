@@ -34,7 +34,7 @@ void dispose() {
   @override
   void initState() {
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
+        AnimationController(TickerProvider: this, duration: Duration(milliseconds: 800));
     _colorTween = ColorTween(begin: widget.fromColor, end: widget.toColor)
         .animate(_animationController);
 
