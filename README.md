@@ -1,16 +1,15 @@
 # open_csb_door
 
-A new Flutter project.
+This project aimes to automate the process of opening the door to my
+previous apartment building when a friend comes to visit. The apartment
+building lacks an intercom, but instead, you can log in on a website to
+open the door.
 
-## Getting Started
+This project automates this process. The app user can
+either open the door with a click of a button or share a link with a friend.
+The link contains a time- and usage-limited key which allows the friend to
+open the door simply by clicking on a button.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+<img src="https://user-images.githubusercontent.com/31400061/137270069-41ddace5-df7d-4f0c-8387-d235395169f2.jpg" width="200" />
